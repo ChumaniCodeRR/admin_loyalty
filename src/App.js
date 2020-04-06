@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import { BrowserRouter, Switch } from "react-router-dom";
+import Dashboard from "./components/pages/Dashboard";
+import Login from "./components/pages/Login";
+import ForgotPassword from "./components/pages/ForgotPassword";
+import Profile from "./components/pages/user/Profile";
+import WebRoute from "./instances/WebRoute";
+import AuthRoute from "./instances/AuthRoute";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <Switch>
+          <AuthRoute path='/' exact={true} component={Dashboard} />
+          <AuthRoute path='/profile' exact={true} component={Profile} />
+          <WebRoute path='/login' exact={true} component={Login} />
+          <WebRoute path='/forgot-password' exact={true} component={ForgotPassword} />
+        </Switch>
+        <ToastContainer />
+      </BrowserRouter>
+    );
+  }
 }
 
 export default App;
