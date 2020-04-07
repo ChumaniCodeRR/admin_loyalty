@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class DashboardTransactions extends Component {
+class ClientTransactions extends Component {
   render() {
     return (
       <div className='card'>
@@ -181,4 +181,4 @@ class DashboardTransactions extends Component {
   }
 }
 
-export default DashboardTransactions;
+export default ClientTransactions;

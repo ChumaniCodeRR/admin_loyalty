@@ -2,7 +2,12 @@ import http from "../../instances/http";
 
 export const login = (data) => {
   return dispatch => {
-    return http.post('auth/login', data)
+    return http.post('auth/login', data, {
+      headers: {
+        Accept: 'application/json',
+        'Content-type': 'application/json'
+      }
+    })
       .then(response => {
         dispatch({
           type: "SET_LOGGED_IN_USER",

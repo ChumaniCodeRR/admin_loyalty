@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { login } from "../../store/actions/auth";
+import { getProfile } from '../../store/actions/user'; 
 import { connect } from 'react-redux';
 import Spinner from "react-bootstrap/Spinner";
 import { Redirect } from 'react-router-dom';
@@ -34,6 +35,7 @@ class Login extends Component {
     };
     await this.props.login(data);
     if(this.props.user) {
+      await this.props.getProfile();
       this.setState({
         redirect: true
       });
@@ -137,4 +139,4 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect (mapStateToProps, { login }) (Login);
+export default connect (mapStateToProps, { login, getProfile }) (Login);

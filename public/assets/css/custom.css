@@ -11,3 +11,13 @@ span.text-danger{
     font-size: 10px;
     margin: 5px 0;
 }
+.account-logo{
+    width: 100%;
+}
+.btn-edit-logo {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 12px;
+    padding: 5px 5px;
+}

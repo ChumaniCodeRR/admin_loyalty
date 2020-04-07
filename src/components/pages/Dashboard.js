@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
 import HeaderBar from "../partials/Header/HeaderBar";
 import SideBar from "../partials/SideBar";
-import ClientDashboard from "./dashboard/ClientDashboard";
+import DashboardContainer from './dashboard/DashboardContainer';
 
 class Dashboard extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      roles: [],
+      loading: false
+    };
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      roles: [],
+      loading: false
+    })
+  }
+
   render() {
     return (
       <>
@@ -12,7 +28,7 @@ class Dashboard extends Component {
         <div className="main-content">
           <div className="container-fluid">
             <div className="row clearfix">
-              <ClientDashboard/>
+              <DashboardContainer/>
             </div>
           </div>
         </div>
@@ -20,5 +36,6 @@ class Dashboard extends Component {
     );
   }
 }
+
 
 export default Dashboard;

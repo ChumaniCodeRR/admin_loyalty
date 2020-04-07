@@ -12,7 +12,7 @@ class Profile extends Component {
         <SideBar />
         <div className="main-content">
           <div className="container-fluid">
-            <div className="row clearfix">
+            <div className="row">
               <div className='col-md-6'>
                 <ProfileForm />
               </div>
