@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { changeLogo } from '../../../store/actions/account';
 import { connect } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
+import { toast } from 'react-toastify';
 
 class AccountLogo extends Component {
 
@@ -24,6 +25,9 @@ class AccountLogo extends Component {
       loading: true
     });
     await this.props.changeLogo({ logo: e.target.files[0] });
+    if (this.props.status) {
+      toast.success('Logo updated!');
+    }
     this.setState({
       loading: false
     });

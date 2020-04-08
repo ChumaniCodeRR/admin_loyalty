@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import {Accordion, Button} from "react-bootstrap";
 
 class SideBar extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      userOpen: true
+    }
+  }
+
   render() {
     return (
       <>
@@ -21,17 +28,17 @@ class SideBar extends Component {
                   <div className="nav-item active">
                     <a href="/"><i className="ik ik-bar-chart-2"> </i><span>Dashboard</span></a>
                   </div>
-                  <div className="nav-item has-sub">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                      <i className="ik ik-lock"> </i><span>Authentication</span>
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                      <div className="submenu-content">
-                        <a href="/" className="menu-item">Login</a>
-                        <a href="/" className="menu-item">Register</a>
-                        <a href="/" className="menu-item">Forgot Password</a>
-                      </div>
-                    </Accordion.Collapse>
+                  <div className="nav-item">
+                    <a href="/"><i className='ik ik-user'> </i>Admins</a>
+                  </div>
+                  <div className="nav-item">
+                    <a href="/"><i className='ik ik-user'> </i>Clients</a>
+                  </div>
+                  <div className="nav-item">
+                    <a href="/"><i className='ik ik-shopping-cart'> </i>Stores</a>
+                  </div>
+                  <div className="nav-item">
+                    <a href="/"><i className='ik ik-users'> </i>Members</a>
                   </div>
                 </nav>
               </div>

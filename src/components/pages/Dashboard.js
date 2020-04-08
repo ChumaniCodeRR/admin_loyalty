@@ -27,9 +27,7 @@ class Dashboard extends Component {
         <SideBar />
         <div className="main-content">
           <div className="container-fluid">
-            <div className="row clearfix">
-              <DashboardContainer/>
-            </div>
+            <DashboardContainer/>
           </div>
         </div>
       </>
