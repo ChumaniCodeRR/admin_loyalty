@@ -27,7 +27,7 @@ class LoyaltyStatusSelector extends Component {
 
   handleChange = async (e) => {
     await this.setState({
-      [e.target.name]: e.target.checked
+      status: e.target.checked
     });
 
     let data = {
@@ -38,7 +38,7 @@ class LoyaltyStatusSelector extends Component {
     if (this.props.saveStatus) {
       toast.success('Updated successfully!');
     } else {
-      toast.danger(this.props.message);
+      toast.error(this.props.message);
     }
   }
 
@@ -46,17 +46,12 @@ class LoyaltyStatusSelector extends Component {
     
     return (
       <>
-        {
-          this.state.loaded && (
-            <Switch
-              onChange={this.handleChange}
-              name='status'
-              checked={this.state.status} 
-              color={this.state.status ? 'primary': 'secondary'} 
-            />
-          )
-        }
-        
+        <Switch
+          onChange={this.handleChange}
+          name='status'
+          checked={this.state.status} 
+          color={this.state.status ? 'primary': 'secondary'} 
+        />
       </>
     );    
   }

@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import HeaderBar from '../../partials/Header/HeaderBar';
 import SideBar from '../../partials/SideBar';
 import { connect } from 'react-redux';
-import { getStores } from '../../../store/actions/stores';
+import { getStores, importStore } from '../../../store/actions/stores';
 import Spinner from 'react-bootstrap/Spinner';
 import DataTable from 'react-data-table-component';
 import StoreActions from '../widgets/stores/StoreActions';
 import LoyaltyStatusSelector from '../widgets/stores/LoyaltyStatusSelector';
+import { toast } from 'react-toastify';
 
 class StoreList extends Component {
 
@@ -33,6 +34,14 @@ class StoreList extends Component {
     });
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.stores.length !== this.props.stores.length) {
+      this.setState({
+        stores: this.props.stores
+      });
+    }
+  }
+
   searchStore = (e) => {
     let searchText = e.target.value;
     let filteredStores = this.props.stores.filter(store => {
@@ -44,6 +53,19 @@ class StoreList extends Component {
     this.setState({
       stores: filteredStores
     });
+  }
+
+  importStores = async (e) => {
+    await this.props.importStore({ file: e.target.files[0]});
+    if (this.props.status) {
+      toast.success(this.props.message);
+    } else {
+      toast.error('An error occurred!');
+    }
+  }
+
+  openFileDialog = (e) => {
+    this.inputElement.click();
   }
 
   render () {
@@ -98,9 +120,18 @@ class StoreList extends Component {
                   <div className='card-header'>
                     <h3>My Stores</h3>
                   </div>
+                  <div className='card-header'>
+                    <div className='alert alert-info'>
+                      <p>Please find below how to format your excel file to import your stores.</p>
+                      <p>Please note that invalid format and/or duplicate store code will be ignored</p>
+                      <p><img src='/assets/img/import-example.png' alt=''/></p>
+                    </div>
+                  </div>
 
                   <div className='card-body'>
-                    <a href='/stores/create' className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                    <a href='/stores/create' className='btn btn-primary'><i className='fa fa-plus'> </i></a>&nbsp;
+                    <button className='btn btn-primary' onClick={this.openFileDialog}><i className='fa fa-upload'> </i></button>
+                    <input type='file' name='file' accept='application/vnd.ms-excel' onChange={this.importStores} className='hidden' ref={input => this.inputElement = input} />
                     <br/>
                     {
                       this.state.loading && (
@@ -134,8 +165,11 @@ class StoreList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    stores: state.storesReducer.stores
+    stores: state.storesReducer.stores,
+    status: state.storesReducer.status,
+    message: state.storesReducer.message,
+    errors: state.storesReducer.errors
   };
 };
 
-export default connect (mapStateToProps, { getStores }) (StoreList);
+export default connect (mapStateToProps, { getStores, importStore }) (StoreList);

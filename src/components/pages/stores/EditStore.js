@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SideBar from '../../partials/SideBar';
 import HeaderBar from '../../partials/Header/HeaderBar';
-import { saveStore } from '../../../store/actions/stores';
+import { updateStore, getStore } from '../../../store/actions/stores';
 import { connect } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 import { Redirect } from 'react-router-dom';
@@ -26,7 +26,22 @@ class AddStore extends Component {
       });
     }
 
-    _saveStore = async (e) => {
+    componentDidMount () {
+      this.fetchStore();
+    }
+
+    fetchStore = async() => {
+      const { match: {params}} = this.props;
+      await this.props.getStore(params.id);
+      this.setState({
+        code: this.props.store.code,
+        name: this.props.store.name,
+        address: this.props.store.address
+      });
+    } 
+
+    _updateStore = async (e) => {
+      const { match: {params}} = this.props;
       e.preventDefault();
       this.setState({
         loading: true
@@ -36,7 +51,7 @@ class AddStore extends Component {
         code: this.state.code,
         address: this.state.address
       };
-      await this.props.saveStore(data);
+      await this.props.updateStore(params.id, data);
       if (this.props.status) {
         this.setState({
           redirect: true
@@ -65,7 +80,7 @@ class AddStore extends Component {
                 </div>
                 <div className='card'>
                   <div className='card-header'>
-                    <h3>Add a store</h3>
+                    <h3>Edit store</h3>
                   </div>
                   <div className='card-body'>
                     <div className='form-group'>
@@ -98,7 +113,7 @@ class AddStore extends Component {
                       }
                     </div>
 
-                    <button type='button' disabled={this.state.loading} onClick={this._saveStore} className='btn btn-primary'>
+                    <button type='button' disabled={this.state.loading} onClick={this._updateStore} className='btn btn-primary'>
                       {
                         this.state.loading && (
                           <Spinner animation='grow' />
@@ -120,8 +135,9 @@ class AddStore extends Component {
 const mapStateToProps = (state) => {
   return {
     status: state.storesReducer.status,
-    errors: state.storesReducer.errors
+    errors: state.storesReducer.errors,
+    store: state.storesReducer.store
   };
 };
 
-export default connect (mapStateToProps, { saveStore} ) (AddStore);
+export default connect (mapStateToProps, { getStore, updateStore }) (AddStore);
