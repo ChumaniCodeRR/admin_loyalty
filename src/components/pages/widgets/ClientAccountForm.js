@@ -19,24 +19,27 @@ class ClientAccountForm extends Component {
     }
   }
 
-  componentDidMount() {
+   componentDidMount() {
     this.fetchAccount();
   }
 
-  fetchAccount = async() => {
+  fetchAccount = () => {
 
     this.setState({
       loading: true
     });
 
-    await this.props.getAccount();
-    this.setState({
-      name: this.props.account.name ?? '',
-      registration_points: this.props.account.registration_points,
-      percentage_per_order: this.props.account.percentage_per_order,
-      point_in_rands: this.props.account.point_in_rands,
-      loading: false
+    this.props.getAccount()
+    .then(() => {
+      this.setState({
+        name: this.props.account.name ?? '',
+        registration_points: this.props.account.registration_points,
+        percentage_per_order: this.props.account.percentage_per_order,
+        point_in_rands: this.props.account.point_in_rands,
+        loading: false
+      });
     });
+    
   }
 
   handleChange = (e) => {

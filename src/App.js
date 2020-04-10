@@ -9,6 +9,8 @@ import WebRoute from "./instances/WebRoute";
 import AuthRoute from "./instances/AuthRoute";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import StoreList from './components/pages/stores/StoreList';
+import AddStore from './components/pages/stores/AddStore';
 
 class App extends Component {
   render() {
@@ -17,6 +19,8 @@ class App extends Component {
         <Switch>
           <AuthRoute path='/' exact={true} component={Dashboard} />
           <AuthRoute path='/profile' exact={true} component={Profile} />
+          <AuthRoute path='/stores' exact={true} component={StoreList} />
+          <AuthRoute path='/stores/create' exact={true} component={AddStore} />
           <WebRoute path='/login' exact={true} component={Login} />
           <WebRoute path='/forgot-password' exact={true} component={ForgotPassword} />
         </Switch>

@@ -35,7 +35,7 @@ class SideBar extends Component {
                     <a href="/"><i className='ik ik-user'> </i>Clients</a>
                   </div>
                   <div className="nav-item">
-                    <a href="/"><i className='ik ik-shopping-cart'> </i>Stores</a>
+                    <a href="/stores"><i className='ik ik-shopping-cart'> </i>Stores</a>
                   </div>
                   <div className="nav-item">
                     <a href="/"><i className='ik ik-users'> </i>Members</a>

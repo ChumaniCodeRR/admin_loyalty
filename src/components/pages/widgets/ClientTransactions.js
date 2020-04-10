@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getTransactions } from '../../../store/actions/transactions';
 import DataTable from 'react-data-table-component';
 import TransactionTypeWidget from './TransactionTypeWidget';
+import Spinner from 'react-bootstrap/Spinner';
 
 class ClientTransactions extends Component {
 
@@ -88,6 +89,13 @@ class ClientTransactions extends Component {
           <h4 className='card-title'>Latest transactions</h4>
         </div>
         <div className='card-body'>
+          {
+            this.state.loading && (
+              <div className='text-center'>
+                <Spinner animation='grow' />
+              </div>
+            )
+          }
           <p> &nbsp;</p>
           <DataTable 
             columns={columns} 

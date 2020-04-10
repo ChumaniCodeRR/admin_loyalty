@@ -28,3 +28,6 @@ span.text-danger{
 .transaction-table .rdt_TableCell, .transaction-table .rdt_TableCell p {
     font-size: 10px;
 }
+.rdt_TableHeader{
+    display: none !important;
+}

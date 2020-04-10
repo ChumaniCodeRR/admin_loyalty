@@ -126,3 +126,22 @@ export const deleteUser = (id) => {
       });
   };
 };
+
+export const getMembers = (account_id = null) => {
+  return dispatch => {
+    let url = account_id ? 'loyalty/member/' + account_id : 'loyalty/member';
+    return http.get(url + '?api_token=' + localStorage.getItem('access_token'))
+      .then(response => {
+        dispatch({
+          type: "SET_USERS",
+          payload: response.data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "SET_USERS",
+          payload: error.data
+        });
+      });
+  };
+};
