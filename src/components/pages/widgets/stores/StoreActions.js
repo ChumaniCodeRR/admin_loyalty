@@ -6,7 +6,7 @@ class StoreActions extends Component {
     return (
       <>
         <a href={'/stores/edit/' + this.props.store.id} className={'btn btn-link text-info'}><i className='fa fa-edit'></i> </a>
-        <DeleteStore store_id={this.props.store.id} />
+        <DeleteStore store={this.props.store} />
       </>
     );   
   }

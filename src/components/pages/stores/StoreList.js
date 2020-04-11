@@ -16,6 +16,9 @@ class StoreList extends Component {
     this.state = {
       stores: [],
       loading: false,
+      store_id: null,
+      store_id_status: null,
+      column: null
     };
   }
 
@@ -58,6 +61,7 @@ class StoreList extends Component {
   importStores = async (e) => {
     await this.props.importStore({ file: e.target.files[0]});
     if (this.props.status) {
+      await this.props.getStores();
       toast.success(this.props.message);
     } else {
       toast.error('An error occurred!');
@@ -93,14 +97,16 @@ class StoreList extends Component {
       {
         name: 'Has voucher',
         selector: 'has_voucher',
-        cell: row => <LoyaltyStatusSelector store={row} column='has_voucher' status={row.has_voucher} />,
-        width: '170'
+        cell: row => <LoyaltyStatusSelector store={row} column='has_voucher' status={row.has_voucher}/>,
+        width: '170',
+        sortable: true
       },
       {
         name: 'Has loyalty',
         selector: 'has_loyalty',
-        cell: row => <LoyaltyStatusSelector store={row} column='has_loyalty' status={row.has_loyalty} />,
-        width: '170'
+        cell: row => <LoyaltyStatusSelector store={row} column='has_loyalty' status={row.has_loyalty}/>,
+        width: '170',
+        sortable: true
       },
       {
         name: 'Actions',

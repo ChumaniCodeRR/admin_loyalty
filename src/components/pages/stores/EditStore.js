@@ -5,6 +5,7 @@ import { updateStore, getStore } from '../../../store/actions/stores';
 import { connect } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 import { Redirect } from 'react-router-dom';
+import Switch from '@material-ui/core/Switch';
 
 class AddStore extends Component {
 
@@ -15,53 +16,65 @@ class AddStore extends Component {
       name: '',
       code: '',
       address: '',
+      has_voucher: false,
+      has_loyalty: false,
       loading: false,
       redirect: false
     };
   }
 
-    handleChange = (e) => {
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  }
+
+  componentDidMount () {
+    this.fetchStore();
+  }
+
+  fetchStore = async() => {
+    const { match: {params}} = this.props;
+    await this.props.getStore(params.id);
+    this.setState({
+      code: this.props.store.code,
+      name: this.props.store.name,
+      address: this.props.store.address,
+      has_loyalty: this.props.store.has_loyalty,
+      has_voucher: this.props.store.has_voucher
+    });
+  }
+
+  handleCheckChange = async(e) => {
+    await this.setState({
+      [e.target.name] : e.target.checked
+    });
+  }
+
+  _updateStore = async (e) => {
+    const { match: {params}} = this.props;
+    e.preventDefault();
+    this.setState({
+      loading: true
+    });
+    let data = {
+      name: this.state.name,
+      code: this.state.code,
+      address: this.state.address,
+      has_loyalty: this.state.has_loyalty,
+      has_voucher: this.state.has_voucher
+    };
+    await this.props.updateStore(params.id, data);
+    if (this.props.status) {
       this.setState({
-        [e.target.name]: e.target.value
+        redirect: true
+      });
+    } else {
+      this.setState({
+        loading: false
       });
     }
-
-    componentDidMount () {
-      this.fetchStore();
-    }
-
-    fetchStore = async() => {
-      const { match: {params}} = this.props;
-      await this.props.getStore(params.id);
-      this.setState({
-        code: this.props.store.code,
-        name: this.props.store.name,
-        address: this.props.store.address
-      });
-    } 
-
-    _updateStore = async (e) => {
-      const { match: {params}} = this.props;
-      e.preventDefault();
-      this.setState({
-        loading: true
-      });
-      let data = {
-        name: this.state.name,
-        code: this.state.code,
-        address: this.state.address
-      };
-      await this.props.updateStore(params.id, data);
-      if (this.props.status) {
-        this.setState({
-          redirect: true
-        });
-      } else {
-        this.setState({
-          loading: false
-        });
-      }
-    }
+  }
 
   render() {
     if (this.state.redirect) {
@@ -111,6 +124,26 @@ class AddStore extends Component {
                           <span className='text-danger'>{this.props.errors.address}</span>
                         )
                       }
+                    </div>
+
+                    <div className='form-group'>
+                      <label>Has voucher</label>
+                      <Switch
+                        name='has_voucher'
+                        checked={this.state.has_voucher}
+                        onChange={this.handleCheckChange}
+                        color={this.state.has_voucher ? 'primary': 'secondary'} 
+                      />
+                    </div>
+
+                    <div className='form-group'>
+                      <label>Has loyalty</label>
+                      <Switch
+                        name='has_loyalty'
+                        checked={this.state.has_loyalty}
+                        onChange={this.handleCheckChange}
+                        color={this.state.has_loyalty ? 'primary': 'secondary'} 
+                      />
                     </div>
 
                     <button type='button' disabled={this.state.loading} onClick={this._updateStore} className='btn btn-primary'>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Switch from '@material-ui/core/Switch';
 import { connect } from 'react-redux';
 import { updateStore } from '../../../../store/actions/stores';
-import { toast } from 'react-toastify';
+import { Redirect } from 'react-router-dom';
 
 class LoyaltyStatusSelector extends Component {
   
@@ -11,47 +11,50 @@ class LoyaltyStatusSelector extends Component {
     this.state = {
       status: true, 
       column: '',
-      store_id: '',
-      loaded: false
+      store: '',
+      loaded: false,
+      redirect: false
     }
   }
 
   async componentDidMount(){
     await this.setState({
       status: this.props.status,
-      store_id: this.props.store.id,
+      store: this.props.store,
       column: this.props.column,
-      loaded: true
+      loaded: true,
+      redirect: false
     });
   }
 
   handleChange = async (e) => {
     await this.setState({
-      status: e.target.checked
+      [e.target.name]: e.target.checked
     });
-
-    let data = {
-      [this.state.column]: this.state.status
-    };
-
-    await this.props.updateStore(this.state.store_id, data);
-    if (this.props.saveStatus) {
-      toast.success('Updated successfully!');
-    } else {
-      toast.error(this.props.message);
-    }
   }
 
   render () {
+
+    let checked = this.state.status;
+
+    if (this.state.redirect) {
+      return <Redirect to='/stores' />
+    }
     
     return (
       <>
-        <Switch
-          onChange={this.handleChange}
-          name='status'
-          checked={this.state.status} 
-          color={this.state.status ? 'primary': 'secondary'} 
-        />
+        { this.state.loaded && (
+            <Switch
+            id={this.props.store.id}
+            onChange={this.handleChange}
+            name='status'
+            checked={checked} 
+            color={this.state.status ? 'primary': 'secondary'} 
+            disabled={true}
+          />
+          )
+        }
+        
       </>
     );    
   }
