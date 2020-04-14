@@ -78,7 +78,7 @@ class AddUser extends Component {
           <Modal.Body>
             <div className='form-group'>
               <label>Name</label>
-              <input type='text' name='name' className='form-control' value={this.state.name} onChange={this.handleChange} />
+              <input type='text' name='name' disabled={this.state.loading} className='form-control' value={this.state.name} onChange={this.handleChange} />
               {
                 this.props.errors.name && (
                   <span className='text-danger'>{this.props.errors.name}</span>
@@ -87,7 +87,7 @@ class AddUser extends Component {
             </div>
             <div className='form-group'>
               <label>Email</label>
-              <input type='text' name='email' className='form-control' value={this.state.email} onChange={this.handleChange} />
+              <input type='text' name='email' disabled={this.state.loading} className='form-control' value={this.state.email} onChange={this.handleChange} />
               {
                 this.props.errors.email && (
                   <span className='text-danger'>{this.props.errors.email}</span>
@@ -102,7 +102,7 @@ class AddUser extends Component {
             <Button disabled={this.state.loading} variant="primary" onClick={this.saveUser} >
               {
                 this.state.loading && (
-                  <Spinner animation='grow' />
+                  <Spinner animation='grow' size='sm' />
                 )
               }
               Save
