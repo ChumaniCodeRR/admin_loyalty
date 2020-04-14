@@ -21,6 +21,13 @@ span.text-danger{
     font-size: 12px;
     padding: 5px 5px;
 }
+.transaction-table .show.dropdown {
+    overflow: initial !important;
+}
+.transaction-table .dropdown-menu.show {
+    transform: translate(0px, 30px) !important;
+    font-size: 10px;
+}
 .table-user-thumb {
     width: 100%;
     padding: 5px;

@@ -87,6 +87,12 @@ class ClientAccountForm extends Component {
             ) 
           }
           <br/>
+
+          <div className='form-group'>
+            <label><strong>API token</strong></label>
+            <p>{ localStorage.getItem('access_token') }</p>
+          </div>
+
           <div className='form-group'>
             <label>Loyalty name</label>
             <input type='text' name='name' disabled={this.state.loading} onChange={this.handleChange} className='form-control' value={this.state.name} />

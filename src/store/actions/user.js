@@ -111,7 +111,7 @@ export const getAdmins = () => {
 
 export const deleteUser = (id) => {
   return dispatch => {
-    return http.delete('user/delete/' + id)
+    return http.delete('user/delete/' + id + '?api_token=' + localStorage.getItem('access_token'))
       .then(response => {
         dispatch({
           type: "DELETE_USER",

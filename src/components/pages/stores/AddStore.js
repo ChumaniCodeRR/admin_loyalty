@@ -5,6 +5,7 @@ import { saveStore } from '../../../store/actions/stores';
 import { connect } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 import { Redirect } from 'react-router-dom';
+import Switch from '@material-ui/core/Switch';
 
 class AddStore extends Component {
 
@@ -15,6 +16,8 @@ class AddStore extends Component {
       name: '',
       code: '',
       address: '',
+      has_loyalty: false,
+      has_voucher: false,
       loading: false,
       redirect: false
     };
@@ -26,6 +29,12 @@ class AddStore extends Component {
       });
     }
 
+    handleCheckChange = async(e) => {
+      await this.setState({
+        [e.target.name] : e.target.checked
+      });
+    }
+
     _saveStore = async (e) => {
       e.preventDefault();
       this.setState({
@@ -34,7 +43,9 @@ class AddStore extends Component {
       let data = {
         name: this.state.name,
         code: this.state.code,
-        address: this.state.address
+        address: this.state.address,
+        has_loyalty: this.state.has_loyalty,
+        has_voucher: this.state.has_voucher
       };
       await this.props.saveStore(data);
       if (this.props.status) {
@@ -96,6 +107,26 @@ class AddStore extends Component {
                           <span className='text-danger'>{this.props.errors.address}</span>
                         )
                       }
+                    </div>
+
+                    <div className='form-group'>
+                      <label>Has voucher</label>
+                      <Switch
+                        name='has_voucher'
+                        checked={this.state.has_voucher}
+                        onChange={this.handleCheckChange}
+                        color={this.state.has_voucher ? 'primary': 'secondary'} 
+                      />
+                    </div>
+
+                    <div className='form-group'>
+                      <label>Has loyalty</label>
+                      <Switch
+                        name='has_loyalty'
+                        checked={this.state.has_loyalty}
+                        onChange={this.handleCheckChange}
+                        color={this.state.has_loyalty ? 'primary': 'secondary'} 
+                      />
                     </div>
 
                     <button type='button' disabled={this.state.loading} onClick={this._saveStore} className='btn btn-primary'>
