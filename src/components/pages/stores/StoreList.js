@@ -18,7 +18,8 @@ class StoreList extends Component {
       loading: false,
       store_id: null,
       store_id_status: null,
-      column: null
+      column: null,
+      client_id: null
     };
   }
 
@@ -27,10 +28,13 @@ class StoreList extends Component {
   }
 
   fetchStores = async() => {
+    const { match: {params}} = this.props;
+    let client_id = params.client_id ?? null;
     this.setState({
-      loading: true
+      loading: true,
+      client_id: client_id
     });
-    await this.props.getStores();
+    await this.props.getStores(client_id);
     this.setState({
       stores: this.props.stores,
       loading: false
@@ -59,7 +63,7 @@ class StoreList extends Component {
   }
 
   importStores = async (e) => {
-    await this.props.importStore({ file: e.target.files[0]});
+    await this.props.importStore({ file: e.target.files[0]}, this.state.client_id);
     if (this.props.status) {
       await this.props.getStores();
       toast.success(this.props.message);
@@ -110,7 +114,7 @@ class StoreList extends Component {
       },
       {
         name: 'Actions',
-        cell: row => <StoreActions store={row} />
+        cell: row => <StoreActions store={row} client_id={this.state.client_id} />
       }
 
     ];
@@ -122,9 +126,14 @@ class StoreList extends Component {
           <div className="container-fluid">
             <div className='row'>
               <div className='col-md-12'>
+                {
+                  this.state.client_id && (
+                    <a href='/client' className='btn btn-link'>Back</a>
+                  )
+                }
                 <div className='card'>
                   <div className='card-header'>
-                    <h3>My Stores</h3>
+                    <h3>{this.state.client_id ? 'Stores' : 'My stores'}</h3>
                   </div>
                   <div className='card-header'>
                     <div className='alert alert-info'>
@@ -135,7 +144,7 @@ class StoreList extends Component {
                   </div>
 
                   <div className='card-body'>
-                    <a href='/stores/create' className='btn btn-primary'><i className='fa fa-plus'> </i></a>&nbsp;
+                    <a href={this.state.client_id ? '/stores/create/' + this.state.client_id : '/stores/create'} className='btn btn-primary'><i className='fa fa-plus'> </i></a>&nbsp;
                     <button className='btn btn-primary' onClick={this.openFileDialog}><i className='fa fa-upload'> </i></button>
                     <input type='file' name='file' accept='application/vnd.ms-excel' onChange={this.importStores} className='hidden' ref={input => this.inputElement = input} />
                     <br/>

@@ -91,7 +91,15 @@ class ClientList extends Component {
                       </Dropdown.Toggle>
                     
                       <Dropdown.Menu>
-                        <Dropdown.Item><DeleteUser user={row.user} role='Client' /></Dropdown.Item>
+                        <DeleteUser user={row.user} role='Client' />
+                        <Dropdown.Item className='btn btn-link text-info' href={'/client/account/' + row.user.id}>
+                            <i className='fa fa-edit'> </i>
+                            Manage loyalty
+                        </Dropdown.Item>
+                        <Dropdown.Item className='btn btn-link text-info' href={'/client/store/' + row.user.id}>
+                            <i className='fa fa-shopping-cart'> </i>
+                            Manage stores
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
       }

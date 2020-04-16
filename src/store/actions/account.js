@@ -1,8 +1,12 @@
 import http  from '../../instances/http';
 
-export const getAccount = () => {
+export const getAccount = (client_id = null) => {
   return dispatch => {
-    return http.get('loyalty?api_token=' + localStorage.getItem('access_token'))
+    let url = 'loyalty?api_token=';
+    if (client_id) {
+      url = 'loyalty/' + client_id + '?api_token=';
+    }
+    return http.get(url + localStorage.getItem('access_token'))
       .then(response => {
         dispatch ({
           type: "SET_ACCOUNT",
@@ -18,9 +22,13 @@ export const getAccount = () => {
   };
 };
 
-export const updateAccount = (data) => {
+export const updateAccount = (data, client_id = null) => {
   return dispatch => {
-    return http.put('loyalty?api_token=' + localStorage.getItem('access_token'), data)
+    let url = 'loyalty?api_token=';
+    if (client_id) {
+      url = 'loyalty/' + client_id + '?api_token=';
+    }
+    return http.put( url + localStorage.getItem('access_token'), data)
       .then(response => {
         dispatch ({
           type: "UPDATE_ACCOUNT",
@@ -36,11 +44,15 @@ export const updateAccount = (data) => {
   };
 };
 
-export const changeLogo = (data) => {
+export const changeLogo = (data, client_id = null) => {
   return dispatch => {
+    let url = 'loyalty?api_token=';
+    if (client_id) {
+      url = 'loyalty/' + client_id + '?api_token=';
+    }
     let formData = new FormData();
     formData.append('logo', data.logo);
-    return http.post('loyalty?api_token=' + localStorage.getItem('access_token'), formData, {
+    return http.post(url + localStorage.getItem('access_token'), formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

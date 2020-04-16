@@ -19,49 +19,58 @@ class AddStore extends Component {
       has_loyalty: false,
       has_voucher: false,
       loading: false,
-      redirect: false
+      redirect: false,
+      client_id: null
     };
   }
 
-    handleChange = (e) => {
-      this.setState({
-        [e.target.name]: e.target.value
-      });
-    }
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  }
 
-    handleCheckChange = async(e) => {
-      await this.setState({
-        [e.target.name] : e.target.checked
-      });
-    }
+  handleCheckChange = async(e) => {
+    await this.setState({
+      [e.target.name] : e.target.checked
+    });
+  }
 
-    _saveStore = async (e) => {
-      e.preventDefault();
+  _saveStore = async (e) => {
+    e.preventDefault();
+    this.setState({
+      loading: true
+    });
+    let data = {
+      name: this.state.name,
+      code: this.state.code,
+      address: this.state.address,
+      has_loyalty: this.state.has_loyalty,
+      has_voucher: this.state.has_voucher
+    };
+    await this.props.saveStore(data, this.state.client_id);
+    if (this.props.status) {
       this.setState({
-        loading: true
+        redirect: true
       });
-      let data = {
-        name: this.state.name,
-        code: this.state.code,
-        address: this.state.address,
-        has_loyalty: this.state.has_loyalty,
-        has_voucher: this.state.has_voucher
-      };
-      await this.props.saveStore(data);
-      if (this.props.status) {
-        this.setState({
-          redirect: true
-        });
-      } else {
-        this.setState({
-          loading: false
-        });
-      }
+    } else {
+      this.setState({
+        loading: false
+      });
     }
+  }
+
+  componentDidMount() {
+    const { match: {params}} = this.props;
+    let client_id = params.client_id ?? null;
+    this.setState({
+      client_id: client_id
+    });
+  }
 
   render() {
     if (this.state.redirect) {
-      return <Redirect to='/stores' />
+      return <Redirect to={this.state.client_id ? '/client/store/' + this.state.client_id : '/stores'} />
     }
     return (
       <>
@@ -72,7 +81,7 @@ class AddStore extends Component {
             <div className='row'>
               <div className='col-md-12'>
                 <div className='pull-right'>
-                  <a href='/stores' className='btn btn-link'>Back</a>
+                  <a href={this.state.client_id ? '/client/store/' + this.state.client_id : '/store'} className='btn btn-link'>Back</a>
                 </div>
                 <div className='card'>
                   <div className='card-header'>

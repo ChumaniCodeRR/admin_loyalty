@@ -38,3 +38,6 @@ span.text-danger{
 .rdt_TableHeader{
     display: none !important;
 }
+.dropdown-menu .dropdown-item:hover, .dropdown-menu .dropdown-item:focus{
+    background-color: #fff !important;
+}

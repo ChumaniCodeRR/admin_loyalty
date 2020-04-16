@@ -31,7 +31,7 @@ class DeleteStore extends Component {
     this.setState({
       loading: true
     });
-    await this.props.deleteStore(this.props.store_id);
+    await this.props.deleteStore(this.props.store.id);
     await this.props.getStores();
     this.setState({
       loading: false

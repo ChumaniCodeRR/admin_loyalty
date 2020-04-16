@@ -19,7 +19,8 @@ class AddStore extends Component {
       has_voucher: false,
       has_loyalty: false,
       loading: false,
-      redirect: false
+      redirect: false,
+      client_id: null
     };
   }
 
@@ -41,7 +42,8 @@ class AddStore extends Component {
       name: this.props.store.name,
       address: this.props.store.address,
       has_loyalty: this.props.store.has_loyalty,
-      has_voucher: this.props.store.has_voucher
+      has_voucher: this.props.store.has_voucher,
+      client_id: params.client_id
     });
   }
 
@@ -64,7 +66,7 @@ class AddStore extends Component {
       has_loyalty: this.state.has_loyalty,
       has_voucher: this.state.has_voucher
     };
-    await this.props.updateStore(params.id, data);
+    await this.props.updateStore(params.id, data, this.state.client_id);
     if (this.props.status) {
       this.setState({
         redirect: true
@@ -78,7 +80,7 @@ class AddStore extends Component {
 
   render() {
     if (this.state.redirect) {
-      return <Redirect to='/stores' />
+      return <Redirect to={this.state.client_id ? '/client/store/' + this.state.client_id : '/stores'} />
     }
     return (
       <>

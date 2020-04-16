@@ -129,7 +129,7 @@ export const deleteUser = (id) => {
 
 export const getMembers = (account_id = null) => {
   return dispatch => {
-    let url = account_id ? 'loyalty/member/' + account_id : 'loyalty/member';
+    let url = account_id ? 'loyalty/member/all/' + account_id : 'loyalty/member/all';
     return http.get(url + '?api_token=' + localStorage.getItem('access_token'))
       .then(response => {
         dispatch({

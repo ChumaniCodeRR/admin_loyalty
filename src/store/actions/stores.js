@@ -1,8 +1,12 @@
 import http from '../../instances/http';
 
-export const getStores = () => {
+export const getStores = (client_id = null) => {
   return dispatch => {
-    return http.get('store?api_token=' + localStorage.getItem('access_token'))
+    let url = 'store/all?api_token=';
+    if (client_id) {
+      url = 'store/all/' + client_id + '?api_token=';
+    }
+    return http.get(url + localStorage.getItem('access_token'))
       .then(response => {
         dispatch({
           type: "SET_STORES",
@@ -36,9 +40,13 @@ export const getStore = (id) => {
   };
 };
 
-export const saveStore = (data) => {
+export const saveStore = (data, client_id = null) => {
   return dispatch => {
-    return http.post('store?api_token=' + localStorage.getItem('access_token'), data)
+    let url = 'store?api_token=';
+    if (client_id) {
+      url = 'store?user_id=' + client_id + '&api_token=';
+    }
+    return http.post( url + localStorage.getItem('access_token'), data)
       .then(response => {
         dispatch({
           type: "SAVE_STORE",
@@ -54,9 +62,13 @@ export const saveStore = (data) => {
   };
 };
 
-export const updateStore = (id, data) => {
+export const updateStore = (id, data, client_id = null) => {
   return dispatch => {
-    return http.put('store/' + id +'?api_token=' + localStorage.getItem('access_token'), data)
+    let url = 'store/' + id +'?api_token=';
+    if (client_id) {
+      url = 'store/' + id +'?user_id=' + client_id + '&api_token=';
+    }
+    return http.put(url + localStorage.getItem('access_token'), data)
       .then(response => {
         dispatch({
           type: "UPDATE_STORE",
@@ -90,10 +102,13 @@ export const deleteStore = (id) => {
   };
 };
 
-export const importStore = (data) => {
+export const importStore = (data, client_id = null) => {
   return dispacth => {
     let formData = new FormData();
     formData.append('file', data.file);
+    if (client_id) {
+      formData.append('user_id', client_id);
+    }
     return http.post('store/import/upload?api_token=' + localStorage.getItem('access_token'), formData, {
       headers: {
         'Content-Type' : 'multipart/form-data'
