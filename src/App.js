@@ -16,6 +16,7 @@ import MemberList from './components/pages/user/member/MemberList';
 import AdminList from './components/pages/user/admin/AdminList';
 import ClientList from './components/pages/user/client/ClientList';
 import ClientAccount from './components/pages/user/client/ClientAccount';
+import MemberTransaction from './components/pages/transaction/MemberTransactions';
 
 class App extends Component {
   render() {
@@ -29,7 +30,9 @@ class App extends Component {
           <AuthRoute path='/stores/create/:client_id' exact={true} component={AddStore} />
           <AuthRoute path='/stores/edit/:id' exact={true} component={EditStore} />
           <AuthRoute path='/stores/edit/:id/:client_id' exact={true} component={EditStore} />
-          <AuthRoute path='/members' exact={true} component={MemberList} />
+          <AuthRoute path='/members/:account_id?' exact={true} component={MemberList} />
+          <AuthRoute path='/transactions/:cell_number' exact={true} component={MemberTransaction} />
+          <AuthRoute path='/admin/transactions/:cell_number/:account_id' exact={true} component={MemberTransaction} />
           <AuthRoute path='/admin' exact={true} component={AdminList} />
           <AuthRoute path='/client' exact={true} component={ClientList} />
           <AuthRoute path='/client/account/:id' exact={true} component={ClientAccount} />

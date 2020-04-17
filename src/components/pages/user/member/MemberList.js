@@ -11,18 +11,24 @@ class MemberList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: []
+      users: [],
+      account_id: null
     };
   }
 
   fetchMembers = async () => {
-    await this.props.getMembers();
+    await this.props.getMembers(this.state.account_id);
     this.setState({
       users: this.props.users
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { match : {params}} = this.props;
+    await this.setState({
+      account_id: params.account_id ?? null
+    });
+
     this.fetchMembers();
   }
 
@@ -72,6 +78,12 @@ class MemberList extends Component {
         selector: 'balance',
         cell: row => row.balance + ' points',
         sortable: true
+      },
+      {
+        name: 'Actions',
+        cell: row =>  <>
+                        <a className='btn btn-link' href={this.state.account_id ? '/admin/transactions/' + row.cell_number + '/' + this.state.account_id : '/transactions/' + row.cell_number }><i className='fa fa-list'> </i></a>
+                      </>
       }
     ];
 
