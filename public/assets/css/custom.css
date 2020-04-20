@@ -21,6 +21,9 @@ span.text-danger{
     font-size: 12px;
     padding: 5px 5px;
 }
+.transaction-table {
+    min-height: 300px !important;
+}
 .transaction-table .show.dropdown {
     overflow: initial !important;
 }
