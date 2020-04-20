@@ -18,11 +18,11 @@ class ClientTransactions extends Component {
     this.fetchTransactions();
   }
 
-  fetchTransactions = async (e) => {
+  fetchTransactions = async () => {
     this.setState({ 
       loading: true
     });
-    await this.props.getTransactions();
+    await this.props.getTransactions(null, 500);
     this.setState({
       transactions: this.props.transactions
     });

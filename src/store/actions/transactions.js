@@ -1,12 +1,12 @@
 import http  from '../../instances/http';
 
-export const getTransactions = (client_id = null) => {
+export const getTransactions = (client_id = null, limit = 10) => {
   return dispatch => {
     let url = 'loyalty/transaction/all?api_token=';
     if (client_id) {
       url = 'loyalty/transaction/all/' + client_id + '?api_token=';
     }
-    return http.get(url + localStorage.getItem('access_token'))
+    return http.get(url + localStorage.getItem('access_token') + '&limit=' + limit)
       .then(response => {
         dispatch({
           type: "SET_TRANSACTIONS",
