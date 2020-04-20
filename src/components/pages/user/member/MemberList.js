@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import HeaderBar from '../../../partials/Header/HeaderBar';
 import SideBar from '../../../partials/SideBar';
 import { getMembers } from '../../../../store/actions/user';
+import { getAccountById } from '../../../../store/actions/account';
 import { connect } from 'react-redux';
 import DataTable from 'react-data-table-component';
 
@@ -12,7 +13,8 @@ class MemberList extends Component {
     super(props);
     this.state = {
       users: [],
-      account_id: null
+      account_id: null,
+      account: null
     };
   }
 
@@ -28,8 +30,10 @@ class MemberList extends Component {
     await this.setState({
       account_id: params.account_id ?? null
     });
-
-    this.fetchMembers();
+    await this.fetchMembers();
+    if (this.state.account_id) {
+      await this.fetchAccount();
+    }
   }
 
   searchMembers = (e) => {
@@ -42,6 +46,13 @@ class MemberList extends Component {
 
     this.setState({
       users: filteredMembers
+    });
+  }
+
+  fetchAccount = async () => {
+    await this.props.getAccountById(this.state.account_id);
+    this.setState({
+      account: this.props.account
     });
   }
 
@@ -95,9 +106,14 @@ class MemberList extends Component {
           <div className="container-fluid">
             <div className='row'>
               <div className='col-md-12'>
+                {
+                  this.state.account_id && (
+                    <a href='/client'><i className='fa fa-angle-left'> </i> Back to client list</a>
+                  )
+                }
                 <div className='card'>
                   <div className='card-header'>
-                    <h3>My Members</h3>
+                    <h3>{this.state.account ? (this.state.account.name + "'s ") : 'My '}members</h3>
                   </div>
                   <div className='card-body'>
                   <div className='row'>
@@ -120,8 +136,9 @@ class MemberList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    users: state.userReducer.users
+    users: state.userReducer.users,
+    account: state.accountReducer.account
   };
 };
 
-export default connect (mapStateToProps, { getMembers }) (MemberList);
+export default connect (mapStateToProps, { getMembers, getAccountById }) (MemberList);

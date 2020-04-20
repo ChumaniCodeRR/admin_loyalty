@@ -71,3 +71,21 @@ export const changeLogo = (data, client_id = null) => {
     });
   };
 };
+
+export const getAccountById = (account_id) => {
+  return dispatch => {
+    return http.get('client/get/' + account_id + '?api_token=' + localStorage.getItem('access_token'))
+      .then(response => {
+        dispatch({
+          type: "SET_ACCOUNT",
+          payload: response.data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "SET_ACCOUNT",
+          payload: error.data
+        });
+      })
+  }
+};

@@ -49,6 +49,11 @@ class MemberTransactions extends Component {
           <div className="container-fluid">
             <div className='row'>
               <div className='col-md-12'>
+                {
+                  this.state.account_id && (
+                    <a href={'/members/' + this.state.account_id}><i class='fa fa-angle-left'> </i> Back to members list</a>
+                  )
+                }
                 <div className='card'>
                     <div className='card-header'>
                       <h4 className='card-title'>{this.state.cell_number}'s transactions</h4>
