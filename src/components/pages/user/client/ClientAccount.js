@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { getAccount, updateAccount, changeLogo } from '../../../../store/actions/account';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Select from 'react-select';
 
 class ClientAccount extends Component {
 
@@ -17,7 +18,8 @@ class ClientAccount extends Component {
       percentage_per_order: 0,
       point_in_rands: 0,
       loading: false,
-      logo: ''
+      logo: '',
+      balance_message: ''
     };
   }
 
@@ -40,7 +42,8 @@ class ClientAccount extends Component {
       registration_points: this.props.account.registration_points,
       percentage_per_order: this.props.account.percentage_per_order,
       point_in_rands: this.props.account.point_in_rands,
-      logo: this.props.account.logo
+      logo: this.props.account.logo,
+      balance_message: this.props.account.balance_message ?? ''
     });
   }
 
@@ -54,7 +57,8 @@ class ClientAccount extends Component {
       name: this.state.name,
       registration_points: this.state.registration_points,
       percentage_per_order: this.state.percentage_per_order,
-      point_in_rands: this.state.point_in_rands
+      point_in_rands: this.state.point_in_rands,
+      balance_message: this.state.balance_message
     };
     await this.props.updateAccount(data, params.id);
     if (this.props.status) {
@@ -88,7 +92,33 @@ class ClientAccount extends Component {
     this.inputElement.click();
   }
 
+  handleFieldChange = async(input) => {
+    let balance_message = this.state.balance_message;
+    balance_message = balance_message + input.value;
+    await this.setState({
+      balance_message: balance_message
+    });
+  }
+
   render() {
+    let options = [
+      {
+        value: '[first_name]',
+        label: 'First name'
+      },
+      {
+        value: '[cell_number]',
+        label: 'Cell number'
+      },
+      {
+        value: '[crown_balance]',
+        label: 'Crown balance'
+      },
+      {
+        value: '[currency_balance]',
+        label: 'Currency balance'
+      }
+    ];
     if (this.state.redirect) {
       return (
         <Redirect to='/client' />
@@ -145,6 +175,19 @@ class ClientAccount extends Component {
                       {
                         this.props.errors.point_in_rands && (
                           <span className='text-danger'>{this.props.errors.point_in_rands}</span>
+                        )
+                      }
+                    </div>
+                    <div className='form-group'>
+                      <label>Select balance message field</label>
+                      <Select options={options} onChange={this.handleFieldChange} />
+                    </div>
+                    <div className='form-group'>
+                      <label>Balance message</label>
+                      <textarea className='form-control' name='balance_message' value={this.state.balance_message} onChange={this.handleChange} />
+                      {
+                        this.props.errors.balance_message && (
+                          <span className='text-danger'>{this.props.errors.balance_message}</span>
                         )
                       }
                     </div>
