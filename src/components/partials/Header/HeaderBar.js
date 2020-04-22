@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Notification from "./Widgets/Notification";
 import UserWidget from "./Widgets/UserWidget";
 
 class HeaderBar extends Component {
@@ -11,7 +10,6 @@ class HeaderBar extends Component {
             <div className="top-menu d-flex align-items-center">
             </div>
             <div className="top-menu d-flex align-items-center">
-              <Notification />
               <UserWidget />
             </div>
           </div>

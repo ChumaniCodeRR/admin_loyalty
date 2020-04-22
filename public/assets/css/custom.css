@@ -31,6 +31,9 @@ span.text-danger{
     transform: translate(0px, 30px) !important;
     font-size: 10px;
 }
+.transaction-table .badge.badge-pill {
+    font-size: 10px;
+}
 .table-user-thumb {
     width: 100%;
     padding: 5px;

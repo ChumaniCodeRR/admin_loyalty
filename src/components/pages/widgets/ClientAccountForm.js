@@ -30,7 +30,7 @@ class ClientAccountForm extends Component {
       loading: true
     });
 
-    this.props.getAccount()
+    this.props.getAccount(this.props.user.id)
     .then(() => {
       this.setState({
         name: this.props.account.name ?? '',
@@ -62,7 +62,7 @@ class ClientAccountForm extends Component {
     this.setState({
       loading: true
     });
-    await this.props.updateAccount(data);
+    await this.props.updateAccount(data, this.props.user.id);
     if (this.props.status) {
       await this.fetchAccount();
       toast.success('Saved Successfully!');
@@ -103,7 +103,7 @@ class ClientAccountForm extends Component {
         value: '[currency_balance]',
         label: 'Currency balance'
       }
-    ]
+    ];
     return (
       <div className='card'>
         <div className='card-header'>

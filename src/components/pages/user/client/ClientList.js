@@ -91,6 +91,10 @@ class ClientList extends Component {
                       </Dropdown.Toggle>
                     
                       <Dropdown.Menu>
+                        <Dropdown.Item className='btn btn-link text-info' href={'/client/dashboard/' + row.user.id}>
+                            <i className='fa fa-setting'> </i>
+                            Dashboard
+                        </Dropdown.Item>
                         <DeleteUser user={row.user} role='Client' />
                         <Dropdown.Item className='btn btn-link text-info' href={'/client/account/' + row.user.id}>
                             <i className='fa fa-edit'> </i>

@@ -17,6 +17,7 @@ import AdminList from './components/pages/user/admin/AdminList';
 import ClientList from './components/pages/user/client/ClientList';
 import ClientAccount from './components/pages/user/client/ClientAccount';
 import MemberTransaction from './components/pages/transaction/MemberTransactions';
+import ClientAdminDashboard from './components/pages/dashboard/ClientAdminDashboard';
 
 class App extends Component {
   render() {
@@ -37,6 +38,7 @@ class App extends Component {
           <AuthRoute path='/client' exact={true} component={ClientList} />
           <AuthRoute path='/client/account/:id' exact={true} component={ClientAccount} />
           <AuthRoute path='/client/store/:client_id' exact={true} component={StoreList} />
+          <AuthRoute path='/client/dashboard/:user_id' exact={true} component={ClientAdminDashboard} />
           <WebRoute path='/login' exact={true} component={Login} />
           <WebRoute path='/forgot-password' exact={true} component={ForgotPassword} />
         </Switch>

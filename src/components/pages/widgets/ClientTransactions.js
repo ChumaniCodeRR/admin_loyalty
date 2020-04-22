@@ -22,7 +22,7 @@ class ClientTransactions extends Component {
     this.setState({ 
       loading: true
     });
-    await this.props.getTransactions(null, 500);
+    await this.props.getTransactions(this.props.user.id, 500);
     this.setState({
       transactions: this.props.transactions
     });

@@ -10,8 +10,9 @@ class DashboardContainer extends Component {
     super(props);
     this.state = {
       role: null,
-      loading: false
-    }
+      loading: false,
+      user: null
+    };
   }
 
   async componentDidMount() {
@@ -25,7 +26,8 @@ class DashboardContainer extends Component {
     await this.props.getProfile();
     if (this.props.user) {
       this.setState({
-        role: this.props.user.roles[0]
+        role: this.props.user.roles[0],
+        user: this.props.user
       });
     }
     this.setState({
@@ -39,7 +41,7 @@ class DashboardContainer extends Component {
     if (this.state.role === 'Admin') {
       dashboard = <p>You are an admin...</p>
     } else if (this.state.role === 'Client') {
-      dashboard = <ClientDashboard />
+      dashboard = <ClientDashboard user={this.state.user} account_form={true} />
     }
 
     return (
