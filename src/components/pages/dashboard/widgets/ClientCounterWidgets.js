@@ -33,7 +33,7 @@ class ClientCounterWidgets extends Component {
                   title='Balance' 
                   color='green'
                   top_value={this.props.report.balances.points_balance.toFixed(2) + ' Crowns'}
-                  bottom_value={'R ' + this.props.report.balances.points_currency.toFixed(2)}
+                  bottom_value={this.props.report.currency + ' ' + this.props.report.balances.points_currency.toFixed(2)}
                   label=' Available balances'
                   />
               </div>
@@ -61,8 +61,8 @@ class ClientCounterWidgets extends Component {
                   title='Orders' 
                   color='red'
                   top_value={this.props.report.orders.total}
-                  bottom_value={'Total Order value R ' + this.props.report.orders.total_value}
-                  label={'Average R ' + this.props.report.orders.average_value}
+                  bottom_value={'Total Order value ' + this.props.report.currency + ' ' + this.props.report.orders.total_value}
+                  label={'Average ' + this.props.report.currency + ' '  + this.props.report.orders.average_value}
                   />
               </div>
             )
@@ -75,7 +75,7 @@ class ClientCounterWidgets extends Component {
                   title='Total Earned' 
                   color='green'
                   top_value={this.props.report.transactions.earn.points.toFixed(2) + ' Crowns'}
-                  bottom_value={'R ' + this.props.report.transactions.earn.currency.toFixed(2)}
+                  bottom_value={this.props.report.currency + ' ' + this.props.report.transactions.earn.currency.toFixed(2)}
                   label={'Total value earned'}
                   />
               </div>
@@ -89,7 +89,7 @@ class ClientCounterWidgets extends Component {
                   title='Total Redeemed' 
                   color='blue'
                   top_value={this.props.report.transactions.redeem.points.toFixed(2) + ' Crowns'}
-                  bottom_value={'R ' + this.props.report.transactions.redeem.currency.toFixed(2)}
+                  bottom_value={this.props.report.currency + ' ' + this.props.report.transactions.redeem.currency.toFixed(2)}
                   label={'Total value redeemed'}
                   />
               </div>

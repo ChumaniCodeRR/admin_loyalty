@@ -34,7 +34,7 @@ class TransactionTable extends Component {
       {
         name: 'Total order',
         selector: 'order_total',
-        cell: row => 'ZAR ' + (row.order_total ?? 0),
+        cell: row => row.loyalty_account.currency + ' ' + (row.order_total ?? 0),
         sortable: true
       },
       {

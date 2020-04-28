@@ -7,6 +7,7 @@ import { getAccount, updateAccount, changeLogo } from '../../../../store/actions
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Select from 'react-select';
+import config from '../../../../Config';
 
 class ClientAccount extends Component {
 
@@ -19,7 +20,8 @@ class ClientAccount extends Component {
       point_in_rands: 0,
       loading: false,
       logo: '',
-      balance_message: ''
+      balance_message: '',
+      currency: ''
     };
   }
 
@@ -43,7 +45,8 @@ class ClientAccount extends Component {
       percentage_per_order: this.props.account.percentage_per_order,
       point_in_rands: this.props.account.point_in_rands,
       logo: this.props.account.logo,
-      balance_message: this.props.account.balance_message ?? ''
+      balance_message: this.props.account.balance_message ?? '',
+      currency: this.props.account.currency
     });
   }
 
@@ -58,7 +61,8 @@ class ClientAccount extends Component {
       registration_points: this.state.registration_points,
       percentage_per_order: this.state.percentage_per_order,
       point_in_rands: this.state.point_in_rands,
-      balance_message: this.state.balance_message
+      balance_message: this.state.balance_message,
+      currency: this.state.currency
     };
     await this.props.updateAccount(data, params.id);
     if (this.props.status) {
@@ -100,6 +104,12 @@ class ClientAccount extends Component {
     });
   }
 
+  handleCurrencyChange = (input) => {
+    this.setState({
+      currency: input.value
+    });
+  }
+
   render() {
     let options = [
       {
@@ -119,6 +129,8 @@ class ClientAccount extends Component {
         label: 'Currency balance'
       }
     ];
+
+    let currencies = config.currencies;
     if (this.state.redirect) {
       return (
         <Redirect to='/client' />
@@ -141,6 +153,13 @@ class ClientAccount extends Component {
                     <div className='form-group col-md-3'>
                       <img src={this.state.logo} alt='' className='account-logo' onClick={this.openDialog} />
                       <input type='file' name='logo' accept="image/jpeg,image/png,image/jpg" onChange={this.uploadLogo} ref={input => this.inputElement = input} className='hidden' />
+                    </div>
+                    <div className='form-group'>
+                      <Select 
+                        options={currencies} 
+                        onChange={this.handleCurrencyChange}
+                        value={currencies.filter(option => option.value === this.state.currency)}
+                      />
                     </div>
                     <div className='form-group'>
                       <label>Loyalty name</label>

@@ -5,6 +5,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { toast } from 'react-toastify';
 import AccountLogo from '../widgets/AccountLogo';
 import Select from 'react-select';
+import config from '../../../Config';
 
 class ClientAccountForm extends Component {
 
@@ -16,7 +17,8 @@ class ClientAccountForm extends Component {
       percentage_per_order: '',
       point_in_rands: '',
       balance_message: '',
-      loading: false
+      loading: false,
+      currency: ''
     }
   }
 
@@ -38,7 +40,8 @@ class ClientAccountForm extends Component {
         percentage_per_order: this.props.account.percentage_per_order,
         point_in_rands: this.props.account.point_in_rands,
         balance_message: this.props.account.balance_message ?? '',
-        loading: false
+        loading: false,
+        currency: this.props.account.currency
       });
     });
     
@@ -57,7 +60,8 @@ class ClientAccountForm extends Component {
       registration_points: this.state.registration_points,
       percentage_per_order: this.state.percentage_per_order,
       point_in_rands: this.state.point_in_rands,
-      balance_message: this.state.balance_message
+      balance_message: this.state.balance_message,
+      currency: this.state.currency
     };
     this.setState({
       loading: true
@@ -85,6 +89,12 @@ class ClientAccountForm extends Component {
     });
   }
 
+  handleCurrencyChange = (input) => {
+    this.setState({
+      currency: input.value
+    });
+  }
+
   render () {
     let options = [
       {
@@ -104,6 +114,7 @@ class ClientAccountForm extends Component {
         label: 'Currency balance'
       }
     ];
+    let currencies = config.currencies;
     return (
       <div className='card'>
         <div className='card-header'>
@@ -120,6 +131,15 @@ class ClientAccountForm extends Component {
           <div className='form-group'>
             <label><strong>API token</strong></label>
             <p>{ localStorage.getItem('access_token') }</p>
+          </div>
+
+          <div className='form-group'>
+            <label><strong>Loyalty currency</strong></label>
+            <Select 
+              options={currencies} 
+              onChange={this.handleCurrencyChange}
+              value={currencies.filter(option => option.value === this.state.currency)}
+            />
           </div>
 
           <div className='form-group'>
