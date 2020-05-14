@@ -108,6 +108,10 @@ class ClientList extends Component {
                             <i className='fa fa-user'> </i>
                             Members
                         </Dropdown.Item>
+                        <Dropdown.Item className='btn btn-link text-info' href={ '/admin/voucher/categories/' + row.user.id }>
+                          <i className='fa fa-list-alt'> </i>
+                          Vouchers
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
       }

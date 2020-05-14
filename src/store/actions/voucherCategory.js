@@ -3,7 +3,7 @@ import http from '../../instances/http';
 export const getCategories = (client_id = null) => {
   return dispatch => {
     let url = client_id ? 'voucher/category/' + client_id : 'voucher/category';
-    return http.get(url + '&api_token=' + localStorage.getItem('access_token'))
+    return http.get(url + '?api_token=' + localStorage.getItem('access_token'))
       .then(response => {
         dispatch({
           type: "SET_CATEGORIES",
@@ -22,7 +22,7 @@ export const getCategories = (client_id = null) => {
 export const storeCategory = (data, client_id = null) => {
   return dispatch => {
     let url = client_id ? 'voucher/category/' + client_id : 'voucher/category';
-    return http.post(url + '&api_token=' + localStorage.getItem('access_token'), {
+    return http.post(url + '?api_token=' + localStorage.getItem('access_token'), {
         name: data.name,
         description: data.description
       })
