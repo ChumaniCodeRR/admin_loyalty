@@ -31,9 +31,10 @@ export default function voucherCategory(state = initialState, action) {
         status: action.payload.success ?? false,
         errors: action.payload.errors ?? [],
         message: action.payload.message ?? ''
-      }
+      };
     case "DELETE_CATEGORY":
       return {
+        ...state,
         status: action.payload.success ?? false,
         message: action.payload.message ?? ''
       };

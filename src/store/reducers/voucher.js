@@ -38,7 +38,13 @@ export default function voucher(state = initialState, action) {
         status: action.payload.success ?? false,
         errors: action.payload.errors ?? [],
         message: action.payload.message ?? ''
-      }
+      };
+    case "EXPORT_VOUCHER":
+      return {
+        ...state,
+        status: action.payload.success ?? false,
+        message: action.payload.message ?? ''
+      };
     default:
       return state;
   }

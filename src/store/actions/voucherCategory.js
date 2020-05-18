@@ -61,7 +61,7 @@ export const getCategory = (id) => {
 
 export const updateCategory = (id, data) => {
   return dispatch => {
-    return http.put('voucher/category/udpdate/' + id + '?api_token=' + localStorage.getItem('access_token'), {
+    return http.put('voucher/category/update/' + id + '?api_token=' + localStorage.getItem('access_token'), {
         name: data.name,
         description: data.description
       })

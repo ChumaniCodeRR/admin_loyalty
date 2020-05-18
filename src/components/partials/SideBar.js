@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getProfile } from '../../store/actions/user'; 
+import { getProfile } from '../../store/actions/user';
+import { isAdmin } from '../../helpers/user';
 
 class SideBar extends Component {
 
@@ -8,7 +9,7 @@ class SideBar extends Component {
     super(props);
     this.state = {
       userOpen: true,
-      role: null
+      roles: []
     };
   }
 
@@ -16,18 +17,21 @@ class SideBar extends Component {
     this.fetchRole();
   }
 
-  fetchRole = async () => {
-    await this.props.getProfile();
-    this.setState({
-      role: this.props.user.roles[0]
-    });
+  fetchRole = () => {
+    this.props.getProfile()
+      .then(() => {
+        this.setState({
+          roles: this.props.user.roles
+        });
+      });
   }
  
   render() {
+    let isUserAdmin = isAdmin(this.state.roles);
     return (
       <>
         {
-          this.state.role && (
+          this.state.roles.length && (
             <div className="app-sidebar colored">
               <div className="sidebar-header">
                 <a className="header-brand" href="/">
@@ -45,7 +49,7 @@ class SideBar extends Component {
                       <a href="/"><i className="ik ik-bar-chart-2"> </i><span>Dashboard</span></a>
                     </div>
                     {
-                      (this.state.role === 'Admin') && (
+                      (isUserAdmin) && (
                         <>
                           <div className="nav-item">
                             <a href="/admin"><i className='ik ik-user'> </i>Admins</a>
@@ -57,13 +61,16 @@ class SideBar extends Component {
                       )
                     }
                     {
-                      (this.state.role === 'Client') && (
+                      (! isUserAdmin) && (
                         <>
                           <div className="nav-item">
                             <a href="/stores"><i className='ik ik-shopping-cart'> </i>Stores</a>
                           </div>
                           <div className="nav-item">
                             <a href="/members"><i className='ik ik-users'> </i>Members</a>
+                          </div>
+                          <div className="nav-item">
+                            <a href="/voucher/categories"><i className='ik ik-list'> </i>Manage Vouchers</a>
                           </div>
                         </>
                       )

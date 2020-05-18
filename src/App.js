@@ -20,6 +20,8 @@ import MemberTransaction from './components/pages/transaction/MemberTransactions
 import ClientAdminDashboard from './components/pages/dashboard/ClientAdminDashboard';
 import VoucherCategoryList from './components/pages/voucher/VoucherCategoryList';
 import AddVoucherCategory from './components/pages/voucher/AddVoucherCategory';
+import EditVoucherCategory from './components/pages/voucher/EditVoucherCategory';
+import voucherList from './components/pages/voucher/VoucherList';
 
 class App extends Component {
   render() {
@@ -43,6 +45,11 @@ class App extends Component {
           <AuthRoute path='/client/dashboard/:user_id' exact={true} component={ClientAdminDashboard} />
           <AuthRoute path='/admin/voucher/categories/:user_id' exact={true} component={VoucherCategoryList} />
           <AuthRoute path='/admin/voucher/categories/add/:user_id' exact={true} component={AddVoucherCategory} />
+          <AuthRoute path='/voucher/categories/edit/:category_id/:user_id' exact={true} component={EditVoucherCategory} />
+          <AuthRoute path='/voucher/categories' exact={true} component={VoucherCategoryList} />
+          <AuthRoute path='/voucher/categories/add' exact={true} component={AddVoucherCategory} />
+          <AuthRoute path='/voucher/categories/edit/:category_id' exact={true} component={EditVoucherCategory} />
+          <AuthRoute path='/vouchers/:category_id' exact={true} component={voucherList} />
           <WebRoute path='/login' exact={true} component={Login} />
           <WebRoute path='/forgot-password' exact={true} component={ForgotPassword} />
         </Switch>

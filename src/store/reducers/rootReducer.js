@@ -6,6 +6,7 @@ import transactions from './transactions';
 import stores from './stores';
 import report from './report';
 import voucherCategory from './voucherCategory';
+import voucher from './voucher';
 
 const rootReducer = combineReducers({
   authReducer: auth,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   transactionsReducer: transactions,
   storesReducer: stores,
   reportReducer: report,
-  voucherCategoryReducer: voucherCategory
+  voucherCategoryReducer: voucherCategory,
+  voucherReducer: voucher
 });
 
 export default rootReducer;

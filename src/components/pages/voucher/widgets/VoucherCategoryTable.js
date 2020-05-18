@@ -3,6 +3,7 @@ import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
 import { getCategories } from '../../../../store/actions/voucherCategory';
 import Spinner from 'react-bootstrap/Spinner';
+import DeleteVoucherCategory from '../../widgets/vouchers/DeleteVoucherCategory';
 
 class VoucherCategoryTable extends Component {
 
@@ -15,17 +16,16 @@ class VoucherCategoryTable extends Component {
     };
   }
 
-  fetchCategories = async() => {
+  fetchCategories = () => {
     this.loading();
-    await this.setState({
-      user_id: this.props.user_id ?? null
-    });
-
-    await this.props.getCategories(this.state.user_id);
-    this.setState({
-      categories: this.props.categories
-    });
-    this.loading();
+    let user_id = this.props.user_id ?? null;
+    this.props.getCategories(user_id)
+      .then(() => {
+        this.setState({
+          categories: this.props.categories
+        });
+        this.loading();
+      });
   }
 
   loading () {
@@ -36,6 +36,14 @@ class VoucherCategoryTable extends Component {
 
   componentDidMount() {
     this.fetchCategories();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevState.categories !== this.props.categories) {
+      this.setState({
+        categories: this.props.categories
+      });
+    }
   }
 
   render () {
@@ -50,9 +58,28 @@ class VoucherCategoryTable extends Component {
         selector: 'description'
       },
       {
+        name: 'Vouchers',
+        selector: 'vouchers',
+        cell: row =>  <>
+                        <a href={'/vouchers/' + row.id}><span className={'badge badge-pill mb-1 badge-info text-center'}>{row.vouchers}</span></a>
+                      </>,
+        sortable: true
+      },
+      {
         name: 'Date',
         selector: 'created_at',
         sortable: true
+      },
+      {
+        name: 'Actions',
+        cell: row => <>
+                        <a 
+                          className='btn btn-link text-primary' 
+                          href={this.state.user_id ? '/voucher/categories/edit/' + row.id + '/' + this.state.user_id : '/voucher/categories/edit/' + row.id}>
+                          <i className='fa fa-edit'> </i>
+                        </a>
+                        <DeleteVoucherCategory category={row} />
+                    </>
       }
     ];
     return (

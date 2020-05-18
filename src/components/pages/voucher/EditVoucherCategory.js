@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
-import { getAccount } from '../../../store/actions/account';
-import { storeCategory } from '../../../store/actions/voucherCategory';
+import { getCategory, updateCategory } from '../../../store/actions/voucherCategory';
 import { Redirect } from 'react-router-dom';
 import HeaderBar from '../../partials/Header/HeaderBar';
 import SideBar from '../../partials/SideBar';
 
-class AddVoucherCategory extends Component {
+class EditVoucherCategory extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      user_id: null,
-      account: null,
       loading: false,
+      id: null,
       name: '',
       description: '',
+      user_id: null,
       redirect: false
     }
   }
@@ -33,32 +32,30 @@ class AddVoucherCategory extends Component {
     });
   }
 
-  async componentDidMount () {
-    const { match : {params}} = this.props;
-    await this.setState({
-      user_id: params.user_id ?? null
-    });
-
-    if (this.state.user_id) {
-      this.fetchAccount();
-    }
+  componentDidMount () {
+    this.fetchCategory();
   }
 
-  fetchAccount = async () => {
+  fetchCategory = async () => {
+    const { match : {params}} = this.props;
+    this.setState({
+        user_id: params.user_id ?? null
+    });
     this.loading();
-    await this.props.getAccount(this.state.user_id);
+    await this.props.getCategory(params.category_id);
     this.setState(
       {
-        account: this.props.account,
-        user_id: this.props.account.user.id
+        id: this.props.category.id,
+        name: this.props.category.name,
+        description: this.props.category.description
       }
     );
     this.loading();
   }
 
-  saveCategory = async() => {
+  update = async() => {
     this.loading();
-    await this.props.storeCategory(this.state, this.state.user_id);
+    await this.props.updateCategory(this.state.id, this.state);
     this.loading();
     if (this.props.status) {
       this.setState({
@@ -68,8 +65,9 @@ class AddVoucherCategory extends Component {
   }
 
   render () {
+    let backUrl = this.state.user_id ? '/admin/voucher/categories/' + this.state.user_id : '/voucher/categories';
     if (this.state.redirect) {
-      return <Redirect to={this.state.user_id ? '/admin/voucher/categories/' + this.state.user_id : '/voucher/categories'} />;
+      return <Redirect to={backUrl} />;
     }
     return (
       <>
@@ -79,14 +77,10 @@ class AddVoucherCategory extends Component {
           <div className="container-fluid">
             <div className='row'>
               <div className='col-md-12'>
-                {
-                  this.state.user_id && (
-                    <a href={ '/admin/voucher/categories/' + this.state.user_id } className='btn btn-link'>Back</a>
-                  )
-                }
+                <a href={ backUrl } className='btn btn-link'>Back</a>
                 <div className='card'>
                   <div className='card-header'>
-                    <h3>Add {this.state.account ? this.state.account.name + "'s voucher categories" : 'My voucher categories'}</h3>
+                    <h3>Edit voucher category</h3>
                   </div>
                   <div className='card-body'>
                     <div className='form-group'>
@@ -107,7 +101,7 @@ class AddVoucherCategory extends Component {
                         )
                       }
                     </div>
-                    <button className='btn btn-primary' onClick={this.saveCategory} disabled={this.state.loading}>
+                    <button className='btn btn-primary' onClick={this.update} disabled={this.state.loading}>
                       {
                         this.state.loading && (
                           <Spinner animation='grow' size='sm' />
@@ -128,11 +122,11 @@ class AddVoucherCategory extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    account: state.accountReducer.account,
+    category: state.voucherCategoryReducer.category,
     status: state.voucherCategoryReducer.status,
     errors: state.voucherCategoryReducer.errors,
     message: state.voucherCategoryReducer.message
   }
 }
 
-export default connect (mapStateToProps, { getAccount, storeCategory }) (AddVoucherCategory);
+export default connect (mapStateToProps, { getCategory, updateCategory }) (EditVoucherCategory);

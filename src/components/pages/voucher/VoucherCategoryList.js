@@ -33,14 +33,14 @@ class VoucherCategoryList extends Component {
       user_id: params.user_id ?? null
     });
 
-    if (this.state.user_id) {
-      this.fetchAccount();
+    if (params.user_id) {
+      this.fetchAccount(params.user_id);
     }
   }
 
-  fetchAccount = async () => {
+  fetchAccount = async (user_id) => {
     this.loading();
-    await this.props.getAccount(this.state.user_id);
+    await this.props.getAccount(user_id);
     this.setState(
       {
         account: this.props.account,
@@ -70,7 +70,7 @@ class VoucherCategoryList extends Component {
                     <h3>{this.state.account ? this.state.account.name + "'s voucher categories" : 'My voucher categories'}</h3>
                   </div>
                   <div className='card-header'>
-                    <a href={this.state.user_id ? '/admin/voucher/categories/add/' + this.state.user_id : '/voucher/category/add'} className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                    <a href={this.state.user_id ? '/admin/voucher/categories/add/' + this.state.user_id : '/voucher/categories/add'} className='btn btn-primary'><i className='fa fa-plus'> </i></a>
                   </div>
                   <div className='card-body'>
                     {
@@ -81,10 +81,17 @@ class VoucherCategoryList extends Component {
                       )
                     }
                     {
-                      (this.state.user_id) && (
+                      (this.state.account) && (
                         <VoucherCategoryTable user_id={this.state.user_id} />
                       )
+                      
                     }
+                    {
+                      (this.state.account === null) && (
+                        <VoucherCategoryTable />
+                      )
+                    }
+
                   </div>
                 </div>
               </div>
