@@ -20,7 +20,7 @@ export const getVouchers = (category_id) => {
 
 export const getVoucher = (id) => {
   return dispatch => {
-    return http.get('voucher/' + id + '?api_token=' + localStorage.getItem('access_token'))
+    return http.get('voucher/get/' + id + '?api_token=' + localStorage.getItem('access_token'))
       .then(response => {
         dispatch({
           type: "SET_VOUCHER",
@@ -76,7 +76,8 @@ export const updateVoucher = (id, data) => {
         product_code: data.product_code ?? null,
         discount_amount: data.discount_amount ?? 0,
         discount_percent: data.discount_percent ?? 0,
-        expires_at: data.expires_at
+        expires_at: data.expires_at,
+        send_sms: data.send_sms
       })
       .then(response => {
         dispatch({

@@ -3,6 +3,7 @@ import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
 import { getVouchers } from '../../../../store/actions/voucher';
 import Spinner from 'react-bootstrap/Spinner';
+import DeleteVoucher from '../../voucher/modals/DeleteVoucher';
 
 class VoucherTable extends Component {
 
@@ -85,6 +86,11 @@ class VoucherTable extends Component {
         sortable: true
       },
       {
+        name: 'Expiration date',
+        selector: 'expires_at',
+        sortable: true
+      },
+      {
         name: 'Status',
         selector: row => row.status.name,
         cell: row =>  <>
@@ -99,10 +105,11 @@ class VoucherTable extends Component {
         name: 'Actions',
         cell: row => <>
                         <a 
-                          className='btn btn-link text-danger' 
-                          href='/'>
-                          <i className='fa fa-times'> </i>
+                          className='btn btn-link text-primary' 
+                          href={'/vouchers/edit/' + row.id}>
+                          <i className='fa fa-edit'> </i>
                         </a>
+                        <DeleteVoucher voucher={row} />
                     </>
       }
     ];

@@ -21,7 +21,8 @@ class ClientAccount extends Component {
       loading: false,
       logo: '',
       balance_message: '',
-      currency: ''
+      currency: '',
+      vetro_sms_account_token: ''
     };
   }
 
@@ -36,21 +37,25 @@ class ClientAccount extends Component {
     this.fetchAccount();
   }
 
-  fetchAccount = async() => {
+  fetchAccount = () => {
     const {match: {params}} = this.props;
-    await this.props.getAccount(params.id);
-    this.setState({
-      name: this.props.account.name ?? '',
-      registration_points: this.props.account.registration_points,
-      percentage_per_order: this.props.account.percentage_per_order,
-      point_in_rands: this.props.account.point_in_rands,
-      logo: this.props.account.logo,
-      balance_message: this.props.account.balance_message ?? '',
-      currency: this.props.account.currency
+    this.props.getAccount(params.id)
+    .then(() => {
+      this.setState({
+        name: this.props.account.name ?? '',
+        registration_points: this.props.account.registration_points,
+        percentage_per_order: this.props.account.percentage_per_order,
+        point_in_rands: this.props.account.point_in_rands,
+        logo: this.props.account.logo,
+        balance_message: this.props.account.balance_message ?? '',
+        currency: this.props.account.currency,
+        vetro_sms_account_token: this.props.account.vetro_sms_account_token
+      });
     });
+    
   }
 
-  _updateAccount = async() => {
+  _updateAccount = () => {
     const { match: {params}} = this.props;
     this.setState({
       loading: true
@@ -62,18 +67,21 @@ class ClientAccount extends Component {
       percentage_per_order: this.state.percentage_per_order,
       point_in_rands: this.state.point_in_rands,
       balance_message: this.state.balance_message,
-      currency: this.state.currency
+      currency: this.state.currency,
+      vetro_sms_account_token: this.state.vetro_sms_account_token
     };
-    await this.props.updateAccount(data, params.id);
-    if (this.props.status) {
-      this.setState({
-        redirect: true
+    this.props.updateAccount(data, params.id)
+      .then(() => {
+        if (this.props.status) {
+          this.setState({
+            redirect: true
+          });
+        } else {
+          this.setState({
+            loading: false
+          });
+        }
       });
-    } else {
-      this.setState({
-        loading: false
-      });
-    }
   }
 
   uploadLogo = async (e) => {
@@ -209,6 +217,10 @@ class ClientAccount extends Component {
                           <span className='text-danger'>{this.props.errors.balance_message}</span>
                         )
                       }
+                    </div>
+                    <div class='form-group'>
+                      <label>Vetro SMS Account Token</label>
+                      <input type='text' className='form-control' name='vetro_sms_account_token' value={this.state.vetro_sms_account_token} onChange={this.handleChange} />
                     </div>
                     <button className='btn btn-primary' disabled={this.state.loading} onClick={this._updateAccount}>
                       <i className='fa fa-save'> </i>
