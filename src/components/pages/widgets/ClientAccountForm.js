@@ -44,7 +44,7 @@ class ClientAccountForm extends Component {
         currency: this.props.account.currency
       });
     });
-    
+
   }
 
   handleChange = (e) => {
@@ -53,7 +53,7 @@ class ClientAccountForm extends Component {
     });
   };
 
-  _updateAccount = async (e) => {
+  _updateAccount = (e) => {
     e.preventDefault();
     let data = {
       name: this.state.name,
@@ -66,15 +66,18 @@ class ClientAccountForm extends Component {
     this.setState({
       loading: true
     });
-    await this.props.updateAccount(data, this.props.user.id);
-    if (this.props.status) {
-      await this.fetchAccount();
-      toast.success('Saved Successfully!');
-    }
-
-    this.setState({
-      loading: false
-    });
+    this.props.updateAccount(data, this.props.user.id)
+      .then(() => {
+        if (this.props.status) {
+           this.fetchAccount();
+          toast.success(this.props.message);
+        } else {
+          toast.error(this.props.message);
+        }
+        this.setState({
+          loading: false
+        });
+      });
   }
 
   reloadAccount = () => {
@@ -124,7 +127,7 @@ class ClientAccountForm extends Component {
           {
             (this.props.account) && (
               <AccountLogo logo={this.props.account.logo} reloadAccount={this.reloadAccount} />
-            ) 
+            )
           }
           <br/>
 
@@ -135,8 +138,8 @@ class ClientAccountForm extends Component {
 
           <div className='form-group'>
             <label><strong>Loyalty currency</strong></label>
-            <Select 
-              options={currencies} 
+            <Select
+              options={currencies}
               onChange={this.handleCurrencyChange}
               value={currencies.filter(option => option.value === this.state.currency)}
             />
@@ -210,7 +213,8 @@ const mapStateToProps = (state) => {
   return {
     account: state.accountReducer.account,
     status: state.accountReducer.status,
-    errors: state.accountReducer.errors
+    errors: state.accountReducer.errors,
+    message: state.accountReducer.message
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { login } from "../../store/actions/auth";
-import { getProfile } from '../../store/actions/user'; 
+import { getProfile } from '../../store/actions/user';
 import { connect } from 'react-redux';
 import Spinner from "react-bootstrap/Spinner";
 import { Redirect } from 'react-router-dom';
@@ -49,6 +49,12 @@ class Login extends Component {
     }
   }
 
+  handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      this.signIn(e);
+    }
+  }
+
   render() {
 
     if (this.state.redirect) {
@@ -83,7 +89,7 @@ class Login extends Component {
                 }
                 <p>Happy to see you again!</p>
                   <div className="form-group">
-                    <input disabled={this.state.loading} type="text" onChange={this.handleChange}  className="form-control" placeholder="Email" name='email' value={this.state.email} />
+                    <input disabled={this.state.loading} type="text" onChange={this.handleChange}  className="form-control" placeholder="Email" name='email' value={this.state.email} onKeyDown={this.handleKeyDown} />
                       <i className="ik ik-user"> </i>
                     {
                       (this.props.errors && this.props.errors.email) && (
@@ -92,7 +98,7 @@ class Login extends Component {
                     }
                   </div>
                   <div className="form-group">
-                    <input disabled={this.state.loading} type="password" name='password' onChange={this.handleChange} className="form-control" placeholder="Password" value={this.state.password} />
+                    <input disabled={this.state.loading} type="password" name='password' onChange={this.handleChange} className="form-control" placeholder="Password" value={this.state.password} onKeyDown={this.handleKeyDown} />
                       <i className="ik ik-lock"> </i>
                     {
                       (this.props.errors && this.props.errors.password) && (

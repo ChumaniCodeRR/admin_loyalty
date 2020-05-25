@@ -1,7 +1,8 @@
 const initialState = {
   account: null,
   status: false,
-  errors: []
+  errors: [],
+  message: ''
 };
 
 export default function account (state = initialState, action) {
@@ -13,10 +14,11 @@ export default function account (state = initialState, action) {
         status: action.payload.success
       };
 
-    case "UPDATE_ACCOUNT" : 
+    case "UPDATE_ACCOUNT" :
       return {
         status: action.payload.success,
-        errors: action.payload.errors ? action.payload.errors: []
+        errors: action.payload.errors ? action.payload.errors: [],
+        message: action.payload.message ?? ''
       }
     default:
       return state;
