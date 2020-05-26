@@ -7,6 +7,7 @@ import stores from './stores';
 import report from './report';
 import voucherCategory from './voucherCategory';
 import voucher from './voucher';
+import permissions from './permissions';
 
 const rootReducer = combineReducers({
   authReducer: auth,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   storesReducer: stores,
   reportReducer: report,
   voucherCategoryReducer: voucherCategory,
-  voucherReducer: voucher
+  voucherReducer: voucher,
+  permissionsReducer: permissions
 });
 
 export default rootReducer;

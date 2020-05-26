@@ -25,7 +25,7 @@ class SideBar extends Component {
         });
       });
   }
- 
+
   render() {
     let isUserAdmin = isAdmin(this.state.roles);
     return (
@@ -71,6 +71,19 @@ class SideBar extends Component {
                           </div>
                           <div className="nav-item">
                             <a href="/voucher/categories"><i className='ik ik-list'> </i>Manage Vouchers</a>
+                          </div>
+                        </>
+                      )
+                    }
+
+                    {
+                      (! isUserAdmin) && (
+                        <>
+                          <div className='nav-item'>
+                            <a href={'/user/list/' + this.props.user.id}>
+                              <i className='ik ik-users'> </i>
+                              Manage users
+                            </a>
                           </div>
                         </>
                       )

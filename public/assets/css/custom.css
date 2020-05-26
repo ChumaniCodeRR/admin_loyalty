@@ -50,3 +50,6 @@ span.text-danger{
 .prod-p-card {
     min-height: 169px;
 }
+.MuiFormControlLabel-label{
+  font-size: 11px !important;
+}

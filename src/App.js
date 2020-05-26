@@ -23,6 +23,8 @@ import AddVoucherCategory from './components/pages/voucher/AddVoucherCategory';
 import EditVoucherCategory from './components/pages/voucher/EditVoucherCategory';
 import voucherList from './components/pages/voucher/VoucherList';
 import EditVoucher from './components/pages/voucher/EditVoucher';
+import UserList from './components/pages/user/UserList';
+import AddUser from './components/pages/user/AddUser';
 
 class App extends Component {
   render() {
@@ -52,6 +54,8 @@ class App extends Component {
           <AuthRoute path='/voucher/categories/edit/:category_id' exact={true} component={EditVoucherCategory} />
           <AuthRoute path='/vouchers/:category_id' exact={true} component={voucherList} />
           <AuthRoute path='/vouchers/edit/:voucher_id' exact={true} component={EditVoucher} />
+          <AuthRoute path='/user/list/:user_id' exact={true} component={UserList} />
+          <AuthRoute path='/user/add' exact={true} component={AddUser} /> 
           <WebRoute path='/login' exact={true} component={Login} />
           <WebRoute path='/forgot-password' exact={true} component={ForgotPassword} />
         </Switch>
