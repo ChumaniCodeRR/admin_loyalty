@@ -26,7 +26,7 @@ export const updateProfile = (data) => {
         dispatch({
           type: "UPDATE_USER",
           payload: response.data
-        });    
+        });
       })
       .catch(error => {
         dispatch({
@@ -144,4 +144,22 @@ export const getMembers = (account_id = null) => {
         });
       });
   };
+};
+
+export const createManager = (data) => {
+  return dispatch => {
+    return http.post('auth/register/manager?api_token=' + localStorage.getItem('access_token'), data)
+      .then(response => {
+        dispatch({
+          type: "CREATE_USER",
+          payload: response.data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "CREATE_USER",
+          payload: error.data
+        });
+      });
+  }
 };

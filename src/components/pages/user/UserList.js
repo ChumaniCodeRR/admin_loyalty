@@ -3,6 +3,20 @@ import HeaderBar from '../../partials/Header/HeaderBar';
 import SideBar from '../../partials/SideBar';
 
 class UserList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user_id: ''
+    }
+  }
+
+  componentDidMount() {
+    const { match : {params}} = this.props;
+    this.setState({
+      user_id: params.user_id
+    });
+  }
+
   render () {
     return (
       <>
@@ -17,7 +31,11 @@ class UserList extends Component {
                     <h4>User list</h4>
                   </div>
                   <div className='card-header'>
-                    <a href='/user/add' className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                    {
+                      this.state.user_id && (
+                        <a href={'/user/add/' + this.state.user_id} className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                      )
+                    }
                   </div>
                   <div className='card-body'>
 

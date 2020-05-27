@@ -55,7 +55,7 @@ class App extends Component {
           <AuthRoute path='/vouchers/:category_id' exact={true} component={voucherList} />
           <AuthRoute path='/vouchers/edit/:voucher_id' exact={true} component={EditVoucher} />
           <AuthRoute path='/user/list/:user_id' exact={true} component={UserList} />
-          <AuthRoute path='/user/add' exact={true} component={AddUser} /> 
+          <AuthRoute path='/user/add/:user_id' exact={true} component={AddUser} /> 
           <WebRoute path='/login' exact={true} component={Login} />
           <WebRoute path='/forgot-password' exact={true} component={ForgotPassword} />
         </Switch>

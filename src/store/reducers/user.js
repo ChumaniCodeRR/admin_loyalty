@@ -14,7 +14,8 @@ export default function user (state = initialState, action) {
         ...state,
         user: action.payload.data ? action.payload.data : null,
         errors: action.payload.errors ? action.payload.errors: [],
-        message: action.payload.message ? action.payload.message : null
+        message: action.payload.message ? action.payload.message : null,
+        status: action.payload.success ?? false
       };
     case "SET_USERS":
       return {
@@ -33,7 +34,6 @@ export default function user (state = initialState, action) {
     case "UPDATE_USER":
       return {
         ...state,
-        user: action.payload.data ? action.payload.data : null,
         errors: action.payload.errors ? action.payload.errors : [],
         status: action.payload.success ? action.payload.success : false,
         message: action.payload.message ? action.payload.message : null

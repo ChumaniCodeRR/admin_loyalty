@@ -6,33 +6,52 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { getPermissions } from '../../../store/actions/permissions';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { createManager } from '../../../store/actions/user';
+import { toast } from 'react-toastify';
+import Spinner from 'react-bootstrap/Spinner';
+import { Redirect } from 'react-router-dom';
+
 
 class AddUser extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      system_permissions: [],
       permissions: [],
-      checkedPermissions: [
-      ]
+      parent_id: '',
+      name: '',
+      email: '',
+      loading: false,
+      redirect: false
     };
   }
 
+  loading = () => {
+    this.setState({
+      loading: ! this.state.loading
+    })
+  }
+
   componentDidMount(){
+    const {match: {params}} = this.props;
     this.props.getPermissions()
       .then(() => {
         this.setState({
-          permissions: this.props.permissions
+          system_permissions: this.props.permissions,
+          parent_id: params.user_id
         });
       });
   }
 
   handleChange = (e) => {
-
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   }
 
   handleCheckChange = async(e) => {
-    let checkedPermissions = this.state.checkedPermissions;
+    let checkedPermissions = this.state.permissions;
     let name = e.target.name;
     let checked = e.target.checked ?? false;
     if (checked === true) {
@@ -45,21 +64,38 @@ class AddUser extends Component {
     }
 
     await this.setState({
-      checkedPermissions: checkedPermissions
+      permissions: checkedPermissions
     });
   }
 
   isChecked = (permission) => {
-    return this.state.checkedPermissions.includes(permission);
+    return this.state.permissions.includes(permission);
   }
 
   storeUser = () => {
-    console.log(this.state);
+    this.loading();
+    this.props.createManager(this.state)
+      .then(() => {
+        if (this.props.storeStatus) {
+          this.setState({
+            redirect: true
+          });
+        } else {
+          toast.error(this.props.message);
+        }
+        this.loading();
+      })
   }
 
   render () {
 
-    let boxes = this.state.permissions.map((permission, index) => {
+    if (this.state.redirect) {
+      return (
+        <Redirect to={'/user/list/' + this.state.user_id} />
+      );
+    }
+
+    let boxes = this.state.system_permissions.map((permission, index) => {
       return <FormControlLabel
         control={<Checkbox
         onChange={this.handleCheckChange} name={permission} />}
@@ -80,14 +116,33 @@ class AddUser extends Component {
                     <h4 className='card-title'>Add user</h4>
                   </div>
                   <div className='card-body'>
+                  <div className='form-group'>
+                    <label>Name*</label>
+                    <input type='text' name='name' className='form-control' disabled={this.state.loading} onChange={this.handleChange} value={this.state.name} />
+                    {
+                      this.props.errors && (
+                        <span className='text-danger'>{this.props.errors.name}</span>
+                      )
+                    }
+                  </div>
                     <div className='form-group'>
-                      <label>Email address</label>
-                      <input type='text' name='email' className='form-control' />
+                      <label>Email address *</label>
+                      <input type='text' name='email' className='form-control' onChange={this.handleChange} disabled={this.state.loading} value={this.state.email} />
+                      {
+                        this.props.errors && (
+                          <span className='text-danger'>{this.props.errors.email}</span>
+                        )
+                      }
                     </div>
                     <div className='form-group'>
-                      <label>Select user permission</label>
+                      <label>Select user permission *</label>
                       {
-                        this.state.permissions.length && (
+                        this.props.errors && (
+                          <span className='text-danger'>{this.props.errors.permissions}</span>
+                        )
+                      }
+                      {
+                        this.state.system_permissions.length && (
                           <>
                             <FormGroup row>
                               {boxes}
@@ -96,7 +151,14 @@ class AddUser extends Component {
                         )
                       }
                     </div>
-                    <button onClick={this.storeUser} className='btn btn-primary'><i className='fa fa-save'> </i></button>
+                    <button disabled={this.state.loading} onClick={this.storeUser} className='btn btn-primary'>
+                      {
+                        this.state.loading && (
+                          <Spinner animation='grow' size='sm' />
+                        )
+                      }
+                      <i className='fa fa-save'> </i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -111,8 +173,11 @@ class AddUser extends Component {
 const mapStateToProps = (state) => {
   return {
     permissions: state.permissionsReducer.permissions,
-    status: state.permissionsReducer.status
+    status: state.permissionsReducer.status,
+    storeStatus: state.userReducer.status,
+    errors: state.userReducer.errors,
+    message: state.userReducer.message
   }
 }
 
-export default connect (mapStateToProps, { getPermissions }) (AddUser);
+export default connect (mapStateToProps, { getPermissions, createManager }) (AddUser);
