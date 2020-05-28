@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getProfile } from '../../store/actions/user';
-import { isAdmin } from '../../helpers/user';
+import { isAdmin, isClient } from '../../helpers/user';
 
 class SideBar extends Component {
 
@@ -28,6 +28,7 @@ class SideBar extends Component {
 
   render() {
     let isUserAdmin = isAdmin(this.state.roles);
+    let isUserClient = isClient(this.state.roles);
     return (
       <>
         {
@@ -61,7 +62,7 @@ class SideBar extends Component {
                       )
                     }
                     {
-                      (! isUserAdmin) && (
+                      (isUserClient) && (
                         <>
                           <div className="nav-item">
                             <a href="/stores"><i className='ik ik-shopping-cart'> </i>Stores</a>
@@ -77,7 +78,7 @@ class SideBar extends Component {
                     }
 
                     {
-                      (! isUserAdmin) && (
+                      (isUserClient) && (
                         <>
                           <div className='nav-item'>
                             <a href={'/user/list/' + this.props.user.id}>

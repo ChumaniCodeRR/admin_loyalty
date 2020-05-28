@@ -163,3 +163,57 @@ export const createManager = (data) => {
       });
   }
 };
+
+export const getManagers = (user_id) => {
+  return dispatch => {
+    return http.get('manager/all/' + user_id + '?api_token=' + localStorage.getItem('access_token'))
+      .then(response => {
+        dispatch({
+          type: "SET_USERS",
+          payload: response.data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "SET_USERS",
+          payload: error.data
+        });
+      });
+  };
+};
+
+export const getManager = (id) => {
+  return dispatch => {
+    return http.get('user/get/' + id + '?api_token=' + localStorage.getItem('access_token'))
+      .then(response => {
+        dispatch({
+          type: "SET_MANAGER",
+          payload: response.data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "SET_MANAGER",
+          payload: error.data
+        });
+      });
+  };
+};
+
+export const updateManager = (id, data) => {
+  return dispatch => {
+    return http.put('manager/update/' + id + '?api_token=' + localStorage.getItem('access_token'), data)
+      .then(response => {
+        dispatch({
+          type: "UPDATE_USER",
+          payload: response.data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "UPDATE_USER",
+          payload: error.data
+        });
+      });
+  };
+}

@@ -25,6 +25,7 @@ import voucherList from './components/pages/voucher/VoucherList';
 import EditVoucher from './components/pages/voucher/EditVoucher';
 import UserList from './components/pages/user/UserList';
 import AddUser from './components/pages/user/AddUser';
+import EditUser from './components/pages/user/EditUser';
 
 class App extends Component {
   render() {
@@ -55,7 +56,8 @@ class App extends Component {
           <AuthRoute path='/vouchers/:category_id' exact={true} component={voucherList} />
           <AuthRoute path='/vouchers/edit/:voucher_id' exact={true} component={EditVoucher} />
           <AuthRoute path='/user/list/:user_id' exact={true} component={UserList} />
-          <AuthRoute path='/user/add/:user_id' exact={true} component={AddUser} /> 
+          <AuthRoute path='/user/add/:user_id' exact={true} component={AddUser} />
+          <AuthRoute path='/user/edit/:user_id' exact={true} component={EditUser} />
           <WebRoute path='/login' exact={true} component={Login} />
           <WebRoute path='/forgot-password' exact={true} component={ForgotPassword} />
         </Switch>

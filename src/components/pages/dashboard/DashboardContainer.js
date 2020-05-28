@@ -40,7 +40,7 @@ class DashboardContainer extends Component {
     let dashboard = null;
     if (this.state.role === 'Admin') {
       dashboard = <p>You are an admin...</p>
-    } else if (this.state.role === 'Client') {
+    } else if ((this.state.role === 'Client') || (this.state.role === 'Manager')) {
       dashboard = <ClientDashboard user={this.state.user} account_form={true} />
     }
 

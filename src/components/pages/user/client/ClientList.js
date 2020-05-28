@@ -52,7 +52,7 @@ class ClientList extends Component {
 
   render () {
     let columns = [
-      { 
+      {
         name: 'Date',
         selector: row => row.user.created_at,
         cell: row => row.user.created_at,
@@ -89,7 +89,7 @@ class ClientList extends Component {
                       <Dropdown.Toggle variant="default" id={'dropdown-basic' + row.id}>
                         <i className='fa fa-angle-down'> </i>
                       </Dropdown.Toggle>
-                    
+
                       <Dropdown.Menu>
                         <Dropdown.Item className='btn btn-link text-info' href={'/client/dashboard/' + row.user.id}>
                             <i className='fa fa-cog'> </i>
@@ -111,6 +111,10 @@ class ClientList extends Component {
                         <Dropdown.Item className='btn btn-link text-info' href={ '/admin/voucher/categories/' + row.user.id }>
                           <i className='fa fa-list-alt'> </i>
                           Vouchers
+                        </Dropdown.Item>
+                        <Dropdown.Item className='btn btn-link text-info' href={'/user/list/' + row.user.id}>
+                            <i className='fa fa-users'> </i>
+                            Manage users
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -134,7 +138,7 @@ class ClientList extends Component {
                     <div className='row'>
                       <div className='form-group col-md-4'>
                         <label>&nbsp;</label>
-                        <input type='text' name='search' onChange={this.searchClients} className='form-control' placeholder='Search clients' /> 
+                        <input type='text' name='search' onChange={this.searchClients} className='form-control' placeholder='Search clients' />
                       </div>
                     </div>
                     <DataTable columns={columns} data={this.state.users} pagination className='transaction-table' />
@@ -146,7 +150,7 @@ class ClientList extends Component {
         </div>
       </>
     );
-  }    
+  }
 }
 
 const mapStateToProps = (state) => {

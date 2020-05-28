@@ -3,7 +3,8 @@ const initialState = {
   status: false,
   message: null,
   errors: [],
-  users: []
+  users: [],
+  manager: null
 };
 
 
@@ -43,6 +44,12 @@ export default function user (state = initialState, action) {
           ...state,
           status: action.payload.success ? action.payload.success : false,
           message: action.payload.message ? action.payload.message : null
+        };
+      case "SET_MANAGER":
+        return {
+          ...state,
+          status: action.payload.success ?? false,
+          manager: action.payload.data ?? null
         };
     default:
       return state;

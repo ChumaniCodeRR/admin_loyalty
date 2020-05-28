@@ -6,24 +6,25 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { getPermissions } from '../../../store/actions/permissions';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { createManager } from '../../../store/actions/user';
+import { updateManager, getManager } from '../../../store/actions/user';
 import { toast } from 'react-toastify';
 import Spinner from 'react-bootstrap/Spinner';
-import { Redirect } from 'react-router-dom';
+import queryString from 'query-string';
 
 
-class AddUser extends Component {
+class EditUser extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       system_permissions: [],
       permissions: [],
-      parent_id: '',
+      user_id: '',
       name: '',
       email: '',
       loading: false,
-      redirect: false
+      redirect: false,
+      parent_id: null
     };
   }
 
@@ -35,12 +36,25 @@ class AddUser extends Component {
 
   componentDidMount(){
     const {match: {params}} = this.props;
+    let parent_id = queryString.parse(this.props.location.search).owner ?? null;
+
+    this.loading();
     this.props.getPermissions()
       .then(() => {
         this.setState({
           system_permissions: this.props.permissions,
-          parent_id: params.user_id
+          user_id: params.user_id,
+          parent_id: parent_id
         });
+        this.props.getManager(params.user_id)
+          .then(() => {
+            this.loading();
+            this.setState({
+              name: this.props.user.name,
+              email: this.props.user.email,
+              permissions: this.props.user.permissions
+            });
+          });
       });
   }
 
@@ -74,13 +88,11 @@ class AddUser extends Component {
 
   storeUser = () => {
     this.loading();
-    this.props.createManager(this.state)
+    this.props.updateManager(this.state.user_id, this.state)
       .then(() => {
         this.loading();
         if (this.props.storeStatus) {
-          this.setState({
-            redirect: true
-          });
+          toast.success(this.props.message);
         } else {
           toast.error(this.props.message);
         }
@@ -89,17 +101,12 @@ class AddUser extends Component {
 
   render () {
 
-    if (this.state.redirect) {
-      return (
-        <Redirect to={'/user/list/' + this.state.parent_id} />
-      );
-    }
-
     let boxes = this.state.system_permissions.map((permission, index) => {
       return <FormControlLabel
         control={<Checkbox
         onChange={this.handleCheckChange} name={permission} />}
         label={permission.toUpperCase()}
+        checked={this.isChecked(permission)}
         key={index}
       />
     });
@@ -111,9 +118,17 @@ class AddUser extends Component {
           <div className="container-fluid">
             <div className="row">
               <div className='col-md-12'>
+                {
+                  this.state.parent_id && (
+                    <a href={'/user/list/' + this.state.parent_id} className='btn btn-link'>
+                      <i className='fa fa-angle-left'> </i>
+                      Back to user list
+                    </a>
+                  )
+                }
                 <div className='card'>
                   <div className='card-header'>
-                    <h4 className='card-title'>Add user</h4>
+                    <h4 className='card-title'>Edit user</h4>
                   </div>
                   <div className='card-body'>
                   <div className='form-group'>
@@ -176,8 +191,10 @@ const mapStateToProps = (state) => {
     status: state.permissionsReducer.status,
     storeStatus: state.userReducer.status,
     errors: state.userReducer.errors,
-    message: state.userReducer.message
+    message: state.userReducer.message,
+    user: state.userReducer.manager,
+    parent: state.userReducer.user
   }
 }
 
-export default connect (mapStateToProps, { getPermissions, createManager }) (AddUser);
+export default connect (mapStateToProps, { getPermissions, updateManager, getManager }) (EditUser);
