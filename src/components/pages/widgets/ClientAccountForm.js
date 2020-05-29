@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getAccount, updateAccount } from '../../../store/actions/account';
+import { getProfile } from '../../../store/actions/user';
 import Spinner from 'react-bootstrap/Spinner';
 import { toast } from 'react-toastify';
 import AccountLogo from '../widgets/AccountLogo';
 import Select from 'react-select';
 import config from '../../../Config';
+import { can } from '../../../helpers/permission';
+import { isClient } from '../../../helpers/user';
+
 
 class ClientAccountForm extends Component {
 
@@ -18,7 +22,9 @@ class ClientAccountForm extends Component {
       point_in_rands: '',
       balance_message: '',
       loading: false,
-      currency: ''
+      currency: '',
+      isClient: false,
+      canUpdateLoyalty: false
     }
   }
 
@@ -40,9 +46,17 @@ class ClientAccountForm extends Component {
         percentage_per_order: this.props.account.percentage_per_order,
         point_in_rands: this.props.account.point_in_rands,
         balance_message: this.props.account.balance_message ?? '',
-        loading: false,
-        currency: this.props.account.currency
+        currency: this.props.account.currency,
+
       });
+      this.props.getProfile()
+        .then(() => {
+          this.setState({
+            isClient: isClient(this.props.user.roles) ?? false,
+            canUpdateLoyalty: can('update loyalty', this.props.user.permissions) ?? false,
+            loading: false
+          });
+        });
     });
 
   }
@@ -125,16 +139,21 @@ class ClientAccountForm extends Component {
         </div>
         <div className='card-body'>
           {
-            (this.props.account) && (
-              <AccountLogo logo={this.props.account.logo} reloadAccount={this.reloadAccount} />
+            this.state.isClient && (
+              (this.props.account) && (
+                <AccountLogo logo={this.props.account.logo} reloadAccount={this.reloadAccount} />
+              )
             )
           }
           <br/>
-
-          <div className='form-group'>
-            <label><strong>API token</strong></label>
-            <p>{ localStorage.getItem('access_token') }</p>
-          </div>
+          {
+            this.state.isClient && (
+              <div className='form-group'>
+                <label><strong>API token</strong></label>
+                <p>{ localStorage.getItem('access_token') }</p>
+              </div>
+            )
+          }
 
           <div className='form-group'>
             <label><strong>Loyalty currency</strong></label>
@@ -194,15 +213,19 @@ class ClientAccountForm extends Component {
               )
             }
           </div>
-          <button className='btn btn-primary' disabled={this.state.loading} onClick={this._updateAccount}>
-            <i className='fa fa-save'> </i>
-            {
-              this.state.loading && (
-                <Spinner animation='grow' size='sm' />
-              )
-            }
-            Update
-          </button>
+          {
+            this.state.canUpdateLoyalty && (
+              <button className='btn btn-primary' disabled={this.state.loading} onClick={this._updateAccount}>
+                <i className='fa fa-save'> </i>
+                {
+                  this.state.loading && (
+                    <Spinner animation='grow' size='sm' />
+                  )
+                }
+                Update
+              </button>
+            )
+          }
         </div>
       </div>
     );
@@ -214,8 +237,9 @@ const mapStateToProps = (state) => {
     account: state.accountReducer.account,
     status: state.accountReducer.status,
     errors: state.accountReducer.errors,
-    message: state.accountReducer.message
+    message: state.accountReducer.message,
+    user: state.userReducer.user
   }
 }
 
-export default connect (mapStateToProps, { getAccount, updateAccount }) (ClientAccountForm);
+export default connect (mapStateToProps, { getAccount, updateAccount, getProfile }) (ClientAccountForm);
