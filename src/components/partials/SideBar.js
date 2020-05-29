@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getProfile } from '../../store/actions/user';
-import { isAdmin, isClient } from '../../helpers/user';
+import { isAdmin, isClient, isManager } from '../../helpers/user';
+import { can } from '../../helpers/permission';
 
 class SideBar extends Component {
 
@@ -9,7 +10,11 @@ class SideBar extends Component {
     super(props);
     this.state = {
       userOpen: true,
-      roles: []
+      roles: [],
+      permissions: [],
+      isAdmin: false,
+      isClient: false,
+      isManager: false
     };
   }
 
@@ -21,14 +26,16 @@ class SideBar extends Component {
     this.props.getProfile()
       .then(() => {
         this.setState({
-          roles: this.props.user.roles
+          roles: this.props.user.roles,
+          permissions: this.props.user.permissions,
+          isAdmin: isAdmin(this.props.user.roles),
+          isClient: isClient(this.props.user.roles),
+          isManager: isManager(this.props.user.roles)
         });
       });
   }
 
   render() {
-    let isUserAdmin = isAdmin(this.state.roles);
-    let isUserClient = isClient(this.state.roles);
     return (
       <>
         {
@@ -50,7 +57,7 @@ class SideBar extends Component {
                       <a href="/"><i className="ik ik-bar-chart-2"> </i><span>Dashboard</span></a>
                     </div>
                     {
-                      (isUserAdmin) && (
+                      (this.state.isAdmin) && (
                         <>
                           <div className="nav-item">
                             <a href="/admin"><i className='ik ik-user'> </i>Admins</a>
@@ -62,7 +69,7 @@ class SideBar extends Component {
                       )
                     }
                     {
-                      (isUserClient) && (
+                      (this.state.isClient) && (
                         <>
                           <div className="nav-item">
                             <a href="/stores"><i className='ik ik-shopping-cart'> </i>Stores</a>
@@ -73,19 +80,29 @@ class SideBar extends Component {
                           <div className="nav-item">
                             <a href="/voucher/categories"><i className='ik ik-list'> </i>Manage Vouchers</a>
                           </div>
-                        </>
-                      )
-                    }
-
-                    {
-                      (isUserClient) && (
-                        <>
                           <div className='nav-item'>
                             <a href={'/user/list/' + this.props.user.id}>
                               <i className='ik ik-users'> </i>
                               Manage users
                             </a>
                           </div>
+                        </>
+                      )
+                    }
+
+                    {
+                      (this.state.isManager) && (
+                        <>
+                          {
+                            (this.state.permissions.length > 0) && (
+                              can('view stores', this.state.permissions) && (
+                                <div className="nav-item">
+                                  <a href="/stores"><i className='ik ik-shopping-cart'> </i>Stores</a>
+                                </div>
+                              )
+
+                            )
+                          }
                         </>
                       )
                     }

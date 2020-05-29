@@ -5,10 +5,18 @@ class StoreActions extends Component {
   render() {
     return (
       <>
-        <a href={this.props.client_id ? '/stores/edit/' + this.props.store.id + '/' + this.props.client_id : '/stores/edit/' + this.props.store.id} className={'btn btn-link text-info'}><i className='fa fa-edit'></i> </a>
-        <DeleteStore store={this.props.store} />
+        {
+          this.props.edit && (
+            <a href={this.props.client_id ? '/stores/edit/' + this.props.store.id + '/' + this.props.client_id : '/stores/edit/' + this.props.store.id} className={'btn btn-link text-info'}><i className='fa fa-edit'></i> </a>
+          )
+        }
+        {
+          this.props.delete && (
+            <DeleteStore store={this.props.store} />
+          )
+        }
       </>
-    );   
+    );
   }
 }
 

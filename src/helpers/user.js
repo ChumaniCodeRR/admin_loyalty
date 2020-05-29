@@ -5,3 +5,7 @@ export const isAdmin = (roles = []) => {
 export const isClient = (roles = []) => {
   return roles.includes('Client');
 };
+
+export const isManager = (roles = []) => {
+  return roles.includes('Manager');
+};

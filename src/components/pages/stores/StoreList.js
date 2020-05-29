@@ -8,6 +8,8 @@ import DataTable from 'react-data-table-component';
 import StoreActions from '../widgets/stores/StoreActions';
 import LoyaltyStatusSelector from '../widgets/stores/LoyaltyStatusSelector';
 import { toast } from 'react-toastify';
+import { can } from '../../../helpers/permission';
+import { getProfile } from '../../../store/actions/user';
 
 class StoreList extends Component {
 
@@ -19,7 +21,11 @@ class StoreList extends Component {
       store_id: null,
       store_id_status: null,
       column: null,
-      client_id: null
+      client_id: null,
+      canAddStore: false,
+      canEditStore: false,
+      canImportStore: false,
+      canDeleteStore: false
     };
   }
 
@@ -27,18 +33,29 @@ class StoreList extends Component {
     this.fetchStores();
   }
 
-  fetchStores = async() => {
+  fetchStores = () => {
     const { match: {params}} = this.props;
     let client_id = params.client_id ?? null;
     this.setState({
       loading: true,
       client_id: client_id
     });
-    await this.props.getStores(client_id);
-    this.setState({
-      stores: this.props.stores,
-      loading: false
-    });
+    this.props.getStores(client_id)
+      .then(() => {
+        this.props.getProfile()
+          .then(() => {
+            this.setState({
+              canAddStore: can('add store', this.props.user.permissions) ?? false,
+              canEditStore: can('update store', this.props.user.permissions) ?? false,
+              canImportStore: can('import store', this.props.user.permissions) ?? false,
+              canDeleteStore: can('delete store', this.props.user.permissions) ?? false
+            });
+            this.setState({
+              stores: this.props.stores,
+              loading: false,
+            });
+          });
+      });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -114,7 +131,13 @@ class StoreList extends Component {
       },
       {
         name: 'Actions',
-        cell: row => <StoreActions store={row} client_id={this.state.client_id} />
+        cell: row =>  <>
+                        {
+                          this.state.stores.length && (
+                            <StoreActions store={row} client_id={this.state.client_id} edit={this.state.canEditStore} delete={this.state.canDeleteStore} />
+                          )
+                        }
+                      </>
       }
 
     ];
@@ -144,10 +167,23 @@ class StoreList extends Component {
                   </div>
 
                   <div className='card-body'>
-                    <a href={this.state.client_id ? '/stores/create/' + this.state.client_id : '/stores/create'} className='btn btn-primary'><i className='fa fa-plus'> </i></a>&nbsp;
-                    <button className='btn btn-primary' onClick={this.openFileDialog}><i className='fa fa-upload'> </i></button>
-                    <input type='file' name='file' accept='application/vnd.ms-excel' onChange={this.importStores} className='hidden' ref={input => this.inputElement = input} />
-                    <br/>
+                    {
+                      this.state.canAddStore && (
+                        <>
+                          <a href={this.state.client_id ? '/stores/create/' + this.state.client_id : '/stores/create'} className='btn btn-primary'><i className='fa fa-plus'> </i></a>&nbsp;
+                        </>
+                      )
+                    }
+                    {
+                      this.state.canImportStore && (
+                        <>
+                          <button className='btn btn-primary' onClick={this.openFileDialog}><i className='fa fa-upload'> </i></button>
+                          <input type='file' name='file' accept='application/vnd.ms-excel' onChange={this.importStores} className='hidden' ref={input => this.inputElement = input} />
+                          <br/>
+                        </>
+                      )
+                    }
+
                     {
                       this.state.loading && (
                         <div className='text-center'>
@@ -158,14 +194,14 @@ class StoreList extends Component {
                     <div className='row'>
                       <div className='form-group col-md-4'>
                         <label>&nbsp;</label>
-                        <input type='text' name='search' onChange={this.searchStore} className='form-control' placeholder='Search stores' /> 
+                        <input type='text' name='search' onChange={this.searchStore} className='form-control' placeholder='Search stores' />
                       </div>
                     </div>
                     <DataTable
                       columns={columns}
                       data={this.state.stores}
                       pagination
-                      className='transaction-table' 
+                      className='transaction-table'
                     />
                   </div>
                 </div>
@@ -183,8 +219,9 @@ const mapStateToProps = (state) => {
     stores: state.storesReducer.stores,
     status: state.storesReducer.status,
     message: state.storesReducer.message,
-    errors: state.storesReducer.errors
+    errors: state.storesReducer.errors,
+    user: state.userReducer.user
   };
 };
 
-export default connect (mapStateToProps, { getStores, importStore }) (StoreList);
+export default connect (mapStateToProps, { getStores, importStore,getProfile }) (StoreList);

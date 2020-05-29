@@ -81,7 +81,7 @@ class AddStore extends Component {
             <div className='row'>
               <div className='col-md-12'>
                 <div className='pull-right'>
-                  <a href={this.state.client_id ? '/client/store/' + this.state.client_id : '/store'} className='btn btn-link'>Back</a>
+                  <a href={this.state.client_id ? '/client/store/' + this.state.client_id : '/stores'} className='btn btn-link'>Back</a>
                 </div>
                 <div className='card'>
                   <div className='card-header'>
@@ -124,7 +124,7 @@ class AddStore extends Component {
                         name='has_voucher'
                         checked={this.state.has_voucher}
                         onChange={this.handleCheckChange}
-                        color={this.state.has_voucher ? 'primary': 'secondary'} 
+                        color={this.state.has_voucher ? 'primary': 'secondary'}
                       />
                     </div>
 
@@ -134,7 +134,7 @@ class AddStore extends Component {
                         name='has_loyalty'
                         checked={this.state.has_loyalty}
                         onChange={this.handleCheckChange}
-                        color={this.state.has_loyalty ? 'primary': 'secondary'} 
+                        color={this.state.has_loyalty ? 'primary': 'secondary'}
                       />
                     </div>
 
