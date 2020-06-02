@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { getCategories } from '../../../../store/actions/voucherCategory';
 import Spinner from 'react-bootstrap/Spinner';
 import DeleteVoucherCategory from '../../widgets/vouchers/DeleteVoucherCategory';
+import { getProfile } from '../../../../store/actions/user';
+import { can } from '../../../../helpers/permission';
 
 class VoucherCategoryTable extends Component {
 
@@ -12,7 +14,11 @@ class VoucherCategoryTable extends Component {
     this.state = {
       categories: [],
       loading: false,
-      user_id: null
+      user_id: null,
+      canUpdateVoucher: false,
+      canAddVoucher: false,
+      canDeleteVoucher: false,
+      canViewVoucher: false
     };
   }
 
@@ -24,7 +30,16 @@ class VoucherCategoryTable extends Component {
         this.setState({
           categories: this.props.categories
         });
-        this.loading();
+        this.props.getProfile()
+          .then(() => {
+            this.loading();
+            this.setState({
+              canUpdateVoucher: can('update voucher', this.props.user.permissions),
+              canAddVoucher: can('add voucher', this.props.user.permissions),
+              canDeleteVoucher: can('delete voucher', this.props.user.permissions),
+              canViewVoucher: can('view vouchers', this.props.user.permissions)
+            });
+          });
       });
   }
 
@@ -73,12 +88,20 @@ class VoucherCategoryTable extends Component {
       {
         name: 'Actions',
         cell: row => <>
-                        <a 
-                          className='btn btn-link text-primary' 
-                          href={this.state.user_id ? '/voucher/categories/edit/' + row.id + '/' + this.state.user_id : '/voucher/categories/edit/' + row.id}>
-                          <i className='fa fa-edit'> </i>
-                        </a>
-                        <DeleteVoucherCategory category={row} />
+                        {
+                          this.state.canUpdateVoucher && (
+                            <a
+                              className='btn btn-link text-primary'
+                              href={this.state.user_id ? '/voucher/categories/edit/' + row.id + '/' + this.state.user_id : '/voucher/categories/edit/' + row.id}>
+                              <i className='fa fa-edit'> </i>
+                            </a>
+                          )
+                        }
+                        {
+                          this.state.canDeleteVoucher && (
+                            <DeleteVoucherCategory category={row} />
+                          )
+                        }
                     </>
       }
     ];
@@ -99,8 +122,9 @@ class VoucherCategoryTable extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    categories: state.voucherCategoryReducer.categories
+    categories: state.voucherCategoryReducer.categories,
+    user: state.userReducer.user
   };
 };
 
-export default connect (mapStateToProps, { getCategories }) (VoucherCategoryTable);
+export default connect (mapStateToProps, { getCategories, getProfile }) (VoucherCategoryTable);

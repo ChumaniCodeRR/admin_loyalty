@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
 import { getVouchers } from '../../../../store/actions/voucher';
+import { getProfile } from '../../../../store/actions/user';
+import { can } from '../../../../helpers/permission';
 import Spinner from 'react-bootstrap/Spinner';
 import DeleteVoucher from '../../voucher/modals/DeleteVoucher';
 
@@ -12,7 +14,11 @@ class VoucherTable extends Component {
     this.state = {
       vouchers: [],
       loading: false,
-      category_id: null
+      category_id: null,
+      canUpdateVoucher: false,
+      canAddVoucher: false,
+      canDeleteVoucher: false,
+      canExportVoucher: false
     };
   }
 
@@ -36,12 +42,21 @@ class VoucherTable extends Component {
 
   componentDidMount() {
     this.fetchVouchers();
+    this.props.getProfile()
+      .then(() => {
+        this.setState({
+          canAddVoucher: can('add voucher', this.props.user.permissions),
+          canUpdateVoucher: can('update voucher', this.props.user.permissions),
+          canDeleteVoucher: can('delete voucher', this.props.user.permissions),
+          canExportVoucher: can('export voucher', this.props.user.permissions)
+        })
+      });
   }
 
   searchVoucher = (e) => {
     let searchText = e.target.value;
     let filteredVouchers = this.props.vouchers.filter(voucher => {
-      let row = voucher.created_at + voucher.code + voucher.cell_number + voucher.name + voucher.status.name;
+      let row = voucher.created_at + voucher.code + voucher.cell_number + voucher.name;
 
       return row.indexOf(searchText.toString()) !== -1;
     });
@@ -92,11 +107,11 @@ class VoucherTable extends Component {
       },
       {
         name: 'Status',
-        selector: row => row.status.name,
+        selector: row => row.status_id,
         cell: row =>  <>
-                        <span 
-                          className={(row.status.name === 'Redeemed') ? 'badge badge-pill mb-1 badge-success text-center': 'badge badge-pill mb-1 badge-info text-center'}>
-                            {row.status.name} on {row.created_at}
+                        <span
+                          className={(row.status_id === 2) ? 'badge badge-pill mb-1 badge-success text-center': 'badge badge-pill mb-1 badge-info text-center'}>
+                            {(row.status_id === 1) ? ' Created ' : ' Redeemed '} on {row.created_at}
                         </span>
                       </>,
         sortable: true
@@ -104,12 +119,20 @@ class VoucherTable extends Component {
       {
         name: 'Actions',
         cell: row => <>
-                        <a 
-                          className='btn btn-link text-primary' 
-                          href={'/vouchers/edit/' + row.id}>
-                          <i className='fa fa-edit'> </i>
-                        </a>
-                        <DeleteVoucher voucher={row} />
+                        {
+                          this.state.canUpdateVoucher && (
+                            <a
+                              className='btn btn-link text-primary'
+                              href={'/vouchers/edit/' + row.id}>
+                              <i className='fa fa-edit'> </i>
+                            </a>
+                          )
+                        }
+                        {
+                          this.state.canDeleteVoucher && (
+                            <DeleteVoucher voucher={row} />
+                          )
+                        }
                     </>
       }
     ];
@@ -133,8 +156,9 @@ class VoucherTable extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    vouchers: state.voucherReducer.vouchers
+    vouchers: state.voucherReducer.vouchers,
+    user: state.userReducer.user
   };
 };
 
-export default connect (mapStateToProps, { getVouchers }) (VoucherTable);
+export default connect (mapStateToProps, { getVouchers, getProfile }) (VoucherTable);

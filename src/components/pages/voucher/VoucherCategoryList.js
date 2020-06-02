@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import { getAccount } from '../../../store/actions/account';
+import { getProfile } from '../../../store/actions/user';
 import { connect } from 'react-redux';
 import HeaderBar from '../../partials/Header/HeaderBar';
 import SideBar from '../../partials/SideBar';
 import VoucherCategoryTable from './widgets/VoucherCategoryTable';
+import { can } from '../../../helpers/permission';
 
 class VoucherCategoryList extends Component {
 
@@ -13,7 +15,8 @@ class VoucherCategoryList extends Component {
     this.state = {
       user_id: null,
       loading: false,
-      account: null
+      account: null,
+      canAddVoucher: false,
     };
   }
 
@@ -25,6 +28,12 @@ class VoucherCategoryList extends Component {
 
   componentDidMount() {
     this.loadUser();
+    this.props.getProfile()
+      .then(() => {
+        this.setState({
+          canAddVoucher: can('add voucher', this.props.user.permissions)
+        });
+      });
   }
 
   loadUser = async () => {
@@ -51,7 +60,7 @@ class VoucherCategoryList extends Component {
   }
 
   render () {
-    
+
     return (
       <>
         <HeaderBar />
@@ -70,7 +79,11 @@ class VoucherCategoryList extends Component {
                     <h3>{this.state.account ? this.state.account.name + "'s voucher categories" : 'My voucher categories'}</h3>
                   </div>
                   <div className='card-header'>
-                    <a href={this.state.user_id ? '/admin/voucher/categories/add/' + this.state.user_id : '/voucher/categories/add'} className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                    {
+                      this.state.canAddVoucher && (
+                        <a href={this.state.user_id ? '/admin/voucher/categories/add/' + this.state.user_id : '/voucher/categories/add'} className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                      )
+                    }
                   </div>
                   <div className='card-body'>
                     {
@@ -84,7 +97,7 @@ class VoucherCategoryList extends Component {
                       (this.state.account) && (
                         <VoucherCategoryTable user_id={this.state.user_id} />
                       )
-                      
+
                     }
                     {
                       (this.state.account === null) && (
@@ -105,8 +118,9 @@ class VoucherCategoryList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    account: state.accountReducer.account
+    account: state.accountReducer.account,
+    user: state.userReducer.user
   }
 };
 
-export default connect(mapStateToProps, { getAccount }) (VoucherCategoryList);
+export default connect(mapStateToProps, { getAccount, getProfile }) (VoucherCategoryList);

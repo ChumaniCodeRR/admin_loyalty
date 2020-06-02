@@ -10,6 +10,7 @@ import { getProfile } from '../../../store/actions/user';
 import AddVoucher from './modals/AddVoucher';
 import { toast } from 'react-toastify';
 import { exportVouchers } from '../../../store/actions/voucher';
+import { can } from '../../../helpers/permission';
 
 class VoucherList extends Component {
 
@@ -18,7 +19,9 @@ class VoucherList extends Component {
     this.state = {
       loading: false,
       category: null,
-      user: null
+      user: null,
+      canAddVoucher: false,
+      canExportVoucher: false
     };
   }
 
@@ -50,7 +53,9 @@ class VoucherList extends Component {
     this.props.getProfile()
       .then(() => {
         this.setState({
-          user: this.props.user
+          user: this.props.user,
+          canAddVoucher: can('add voucher', this.props.user.permissions),
+          canExportVoucher: can('export voucher', this.props.user.permissions)
         });
       });
   }
@@ -91,22 +96,34 @@ class VoucherList extends Component {
                     {
                       this.state.category && (
                         <>
-                          <AddVoucher category={this.state.category} /> &nbsp;
+                          {
+                            this.state.canAddVoucher && (
+                              <>
+                                <AddVoucher category={this.state.category} /> &nbsp;
+                              </>
+                            )
+                          }
                         </>
                       )
                     }
-                    
+
                     {
                       this.state.category && (
                         <>
-                          <button disabled={this.state.loading} onClick={this.export} className='btn btn-primary'>
-                            {
-                              this.state.loading && (
-                                <Spinner animation='border' size='sm' />
-                              )
-                            }
-                            <i className='fa fa-download'> </i> Export
-                          </button> &nbsp;
+                          {
+                            this.state.canExportVoucher && (
+                              <>
+                                <button disabled={this.state.loading} onClick={this.export} className='btn btn-primary'>
+                                  {
+                                    this.state.loading && (
+                                      <Spinner animation='border' size='sm' />
+                                    )
+                                  }
+                                  <i className='fa fa-download'> </i> Export
+                                </button> &nbsp;
+                              </>
+                            )
+                          }
                         </>
                       )
                     }

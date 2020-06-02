@@ -3,8 +3,10 @@ import HeaderBar from '../../../partials/Header/HeaderBar';
 import SideBar from '../../../partials/SideBar';
 import { getMembers } from '../../../../store/actions/user';
 import { getAccountById } from '../../../../store/actions/account';
+import { getProfile } from '../../../../store/actions/user';
 import { connect } from 'react-redux';
 import DataTable from 'react-data-table-component';
+import { can } from '../../../../helpers/permission';
 
 
 class MemberList extends Component {
@@ -14,26 +16,35 @@ class MemberList extends Component {
     this.state = {
       users: [],
       account_id: null,
-      account: null
+      account: null,
+      canViewTransactions: false
     };
   }
 
-  fetchMembers = async () => {
-    await this.props.getMembers(this.state.account_id);
-    this.setState({
-      users: this.props.users
-    });
+  fetchMembers = () => {
+
+      this.props.getProfile()
+        .then(() => {
+          this.setState({
+            canViewTransactions: can('view member transactions', this.props.user.permissions)
+          });
+          this.props.getMembers(this.state.account_id)
+            .then(() => {
+              this.setState({
+                users: this.props.users
+              });
+            });
+        });
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { match : {params}} = this.props;
-    await this.setState({
+    this.setState({
       account_id: params.account_id ?? null
     });
-    await this.fetchMembers();
-    if (this.state.account_id) {
-      await this.fetchAccount();
-    }
+    this.fetchAccount();
+    this.fetchMembers();
+
   }
 
   searchMembers = (e) => {
@@ -58,7 +69,7 @@ class MemberList extends Component {
 
   render () {
     let columns = [
-      { 
+      {
         name: 'Date',
         selector: 'created_at',
         sortable: true
@@ -93,7 +104,11 @@ class MemberList extends Component {
       {
         name: 'Actions',
         cell: row =>  <>
-                        <a className='btn btn-link' href={this.state.account_id ? '/admin/transactions/' + row.cell_number + '/' + this.state.account_id : '/transactions/' + row.cell_number }><i className='fa fa-list'> </i></a>
+                        {
+                          this.state.canViewTransactions && (
+                            <a className='btn btn-link' href={this.state.account_id ? '/admin/transactions/' + row.cell_number + '/' + this.state.account_id : '/transactions/' + row.cell_number }><i className='fa fa-list'> </i></a>
+                          )
+                        }
                       </>
       }
     ];
@@ -119,7 +134,7 @@ class MemberList extends Component {
                   <div className='row'>
                       <div className='form-group col-md-4'>
                         <label>&nbsp;</label>
-                        <input type='text' name='search' onChange={this.searchMembers} className='form-control' placeholder='Search members' /> 
+                        <input type='text' name='search' onChange={this.searchMembers} className='form-control' placeholder='Search members' />
                       </div>
                     </div>
                     <DataTable columns={columns} data={this.state.users} pagination className='transaction-table' />
@@ -131,14 +146,15 @@ class MemberList extends Component {
         </div>
       </>
     );
-  }    
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
     users: state.userReducer.users,
-    account: state.accountReducer.account
+    account: state.accountReducer.account,
+    user: state.userReducer.user
   };
 };
 
-export default connect (mapStateToProps, { getMembers, getAccountById }) (MemberList);
+export default connect (mapStateToProps, { getMembers, getAccountById, getProfile }) (MemberList);

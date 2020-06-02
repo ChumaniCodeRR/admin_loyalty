@@ -103,6 +103,36 @@ class SideBar extends Component {
 
                             )
                           }
+                          {
+                            (this.state.permissions.length > 0) && (
+                              can('view members', this.state.permissions) && (
+                                <div className="nav-item">
+                                  <a href="/members"><i className='ik ik-users'> </i>Members</a>
+                                </div>
+                              )
+
+                            )
+                          }
+                          {
+                            (this.state.permissions.length > 0) && (
+                              can('view vouchers', this.state.permissions) && (
+                                <div className="nav-item">
+                                  <a href="/voucher/categories"><i className='ik ik-list'> </i>Manage vouchers</a>
+                                </div>
+                              )
+
+                            )
+                          }
+                          {
+                            (this.state.permissions.length > 0) && (
+                              can('view users', this.state.permissions) && (
+                                <div className="nav-item">
+                                  <a href={'/user/list/' + this.props.user.id}><i className='ik ik-users'> </i>Manage users</a>
+                                </div>
+                              )
+
+                            )
+                          }
                         </>
                       )
                     }

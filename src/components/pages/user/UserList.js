@@ -3,9 +3,10 @@ import HeaderBar from '../../partials/Header/HeaderBar';
 import SideBar from '../../partials/SideBar';
 import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
-import { getManagers } from '../../../store/actions/user';
+import { getManagers, getProfile } from '../../../store/actions/user';
 import { getAccount } from '../../../store/actions/account';
 import DeleteManager from '../widgets/user/modals/DeleteManager';
+import { can } from '../../../helpers/permission';
 
 class UserList extends Component {
   constructor(props) {
@@ -13,7 +14,10 @@ class UserList extends Component {
     this.state = {
       user_id: '',
       users: [],
-      account: null
+      account: null,
+      canAddUser: false,
+      canDeleteUser: false,
+      canUpdateUser: false
     }
   }
 
@@ -22,18 +26,27 @@ class UserList extends Component {
     this.setState({
       user_id: params.user_id
     });
-    this.props.getManagers(params.user_id)
+    this.props.getProfile()
       .then(() => {
         this.setState({
-          users: this.props.users
+          canAddUser: can('add user', this.props.me.permissions),
+          canDeleteUser: can('delete user', this.props.me.permissions),
+          canUpdateUser: can('update user', this.props.me.permissions)
         });
+        this.props.getManagers(params.user_id)
+          .then(() => {
+            this.setState({
+              users: this.props.users
+            });
+          });
+        this.props.getAccount(params.user_id)
+          .then(() => {
+            this.setState({
+              account: this.props.account
+            });
+          });
       });
-    this.props.getAccount(params.user_id)
-      .then(() => {
-        this.setState({
-          account: this.props.account
-        });
-      });
+
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -64,8 +77,16 @@ class UserList extends Component {
       {
         name: 'Actions',
         cell: row =>  <>
-                        <a className='btn btn-link' href={'/user/edit/' + row.id + '?owner=' + this.state.user_id}><i className='fa fa-edit'> </i></a>
-                        <DeleteManager user={row} parent_id={this.state.user_id} />
+                        {
+                          this.state.canUpdateUser && (
+                            <a className='btn btn-link' href={'/user/edit/' + row.id + '?owner=' + this.state.user_id}><i className='fa fa-edit'> </i></a>
+                          )
+                        }
+                        {
+                          this.state.canDeleteUser && (
+                            <DeleteManager user={row} parent_id={this.state.user_id} />
+                          )
+                        }
                       </>
       }
     ];
@@ -84,7 +105,9 @@ class UserList extends Component {
                   <div className='card-header'>
                     {
                       this.state.user_id && (
-                        <a href={'/user/add/' + this.state.user_id} className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                        this.state.canAddUser && (
+                          <a href={'/user/add/' + this.state.user_id} className='btn btn-primary'><i className='fa fa-plus'> </i></a>
+                        )
                       )
                     }
                   </div>
@@ -108,8 +131,9 @@ class UserList extends Component {
 const mapStateToProps = (state) => {
   return {
     users: state.userReducer.users,
-    account: state.accountReducer.account
+    account: state.accountReducer.account,
+    me: state.userReducer.user
   };
 };
 
-export default connect(mapStateToProps, { getManagers, getAccount }) (UserList);
+export default connect(mapStateToProps, { getManagers, getAccount, getProfile }) (UserList);
