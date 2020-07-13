@@ -178,7 +178,7 @@ class ClientAccountForm extends Component {
             <Select
                 options={expiry_months}
                 onChange={this.handleExpirationMonthChange}
-                value={expiry_months.filter(option => option.value === this.state.expiration_months)}
+                value={expiry_months.filter(option => option.value.toString() === this.state.expiration_months.toString())}
             />
           </div>
 
