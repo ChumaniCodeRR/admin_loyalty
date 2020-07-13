@@ -23,7 +23,7 @@ class ClientAccount extends Component {
       balance_message: '',
       currency: '',
       vetro_sms_account_token: '',
-      expiration_months: ''
+      expiration_months: null
     };
   }
 
@@ -180,14 +180,18 @@ class ClientAccount extends Component {
                         value={currencies.filter(option => option.value === this.state.currency)}
                       />
                     </div>
-                    <div className='form-group'>
-                      <label>Points expire after</label>
-                      <Select
-                          options={expiry_months}
-                          onChange={this.handleChangeExpirationMonth}
-                          value={expiry_months.filter(option => option.value.toString() === this.state.expiration_months.toString())}
-                      />
-                    </div>
+                    {
+                      this.state.expiration_months && (
+                        <div className='form-group'>
+                          <label>Points expire after</label>
+                          <Select
+                              options={expiry_months}
+                              onChange={this.handleChangeExpirationMonth}
+                              value={expiry_months.filter(option => option.value.toString() === this.state.expiration_months.toString())}
+                          />
+                        </div>
+                      )
+                    }
                     <div className='form-group'>
                       <label>Loyalty name</label>
                       <input type='text' name='name' disabled={this.state.loading} onChange={this.handleChange} className='form-control' value={this.state.name} />
