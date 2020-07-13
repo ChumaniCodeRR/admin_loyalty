@@ -32,6 +32,12 @@ class TransactionTable extends Component {
         sortable: true
       },
       {
+        name: 'Amount',
+        selector: 'currency_amount',
+        cell: row => row.loyalty_account.currency + ' ' + row.currency_amount,
+        sortable: true
+      },
+      {
         name: 'Total order',
         selector: 'order_total',
         cell: row => row.loyalty_account.currency + ' ' + (row.order_total ?? 0),
@@ -42,7 +48,7 @@ class TransactionTable extends Component {
         selector: 'transaction_status',
         sortable: true
       },
-      
+
       {
         name: 'Type',
         selector: 'transaction_type',
@@ -56,9 +62,9 @@ class TransactionTable extends Component {
     ];
     return (
       <>
-        <DataTable 
-            columns={columns} 
-            data={this.props.transactions} 
+        <DataTable
+            columns={columns}
+            data={this.props.transactions}
             className='transaction-table'
             pagination
           />

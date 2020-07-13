@@ -22,7 +22,8 @@ class ClientAccount extends Component {
       logo: '',
       balance_message: '',
       currency: '',
-      vetro_sms_account_token: ''
+      vetro_sms_account_token: '',
+      expiration_months: ''
     };
   }
 
@@ -49,7 +50,8 @@ class ClientAccount extends Component {
         logo: this.props.account.logo,
         balance_message: this.props.account.balance_message ?? '',
         currency: this.props.account.currency,
-        vetro_sms_account_token: this.props.account.vetro_sms_account_token
+        vetro_sms_account_token: this.props.account.vetro_sms_account_token,
+        expiration_months: this.props.account.expiration_months
       });
     });
     
@@ -68,7 +70,8 @@ class ClientAccount extends Component {
       point_in_rands: this.state.point_in_rands,
       balance_message: this.state.balance_message,
       currency: this.state.currency,
-      vetro_sms_account_token: this.state.vetro_sms_account_token
+      vetro_sms_account_token: this.state.vetro_sms_account_token,
+      expiration_months: this.state.expiration_months
     };
     this.props.updateAccount(data, params.id)
       .then(() => {
@@ -118,7 +121,14 @@ class ClientAccount extends Component {
     });
   }
 
+  handleChangeExpirationMonth = (input) => {
+    this.setState({
+      expiration_months: input.value
+    });
+  }
+
   render() {
+    let expiry_months = config.expiry_months;
     let options = [
       {
         value: '[first_name]',
@@ -163,10 +173,19 @@ class ClientAccount extends Component {
                       <input type='file' name='logo' accept="image/jpeg,image/png,image/jpg" onChange={this.uploadLogo} ref={input => this.inputElement = input} className='hidden' />
                     </div>
                     <div className='form-group'>
+                      <label>Select currency</label>
                       <Select 
                         options={currencies} 
                         onChange={this.handleCurrencyChange}
                         value={currencies.filter(option => option.value === this.state.currency)}
+                      />
+                    </div>
+                    <div className='form-group'>
+                      <label>Points expire after</label>
+                      <Select
+                          options={expiry_months}
+                          onChange={this.handleChangeExpirationMonth}
+                          value={expiry_months.filter(option => option.value === this.state.expiration_months)}
                       />
                     </div>
                     <div className='form-group'>
@@ -218,7 +237,7 @@ class ClientAccount extends Component {
                         )
                       }
                     </div>
-                    <div class='form-group'>
+                    <div className='form-group'>
                       <label>Vetro SMS Account Token</label>
                       <input type='text' className='form-control' name='vetro_sms_account_token' value={this.state.vetro_sms_account_token} onChange={this.handleChange} />
                     </div>

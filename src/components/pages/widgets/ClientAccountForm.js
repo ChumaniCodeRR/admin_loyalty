@@ -24,12 +24,19 @@ class ClientAccountForm extends Component {
       loading: false,
       currency: '',
       isClient: false,
-      canUpdateLoyalty: false
+      canUpdateLoyalty: false,
+      expiration_months: ''
     }
   }
 
    componentDidMount() {
     this.fetchAccount();
+  }
+
+  handleExpirationMonthChange = (input) => {
+    this.setState({
+      expiration_months: input.value
+    });
   }
 
   fetchAccount = () => {
@@ -47,6 +54,7 @@ class ClientAccountForm extends Component {
         point_in_rands: this.props.account.point_in_rands,
         balance_message: this.props.account.balance_message ?? '',
         currency: this.props.account.currency,
+        expiration_months: this.props.account.expiration_months
 
       });
       this.props.getProfile()
@@ -75,7 +83,8 @@ class ClientAccountForm extends Component {
       percentage_per_order: this.state.percentage_per_order,
       point_in_rands: this.state.point_in_rands,
       balance_message: this.state.balance_message,
-      currency: this.state.currency
+      currency: this.state.currency,
+      expiration_months: this.state.expiration_months
     };
     this.setState({
       loading: true
@@ -132,6 +141,7 @@ class ClientAccountForm extends Component {
       }
     ];
     let currencies = config.currencies;
+    let expiry_months = config.expiry_months;
     return (
       <div className='card'>
         <div className='card-header'>
@@ -161,6 +171,14 @@ class ClientAccountForm extends Component {
               options={currencies}
               onChange={this.handleCurrencyChange}
               value={currencies.filter(option => option.value === this.state.currency)}
+            />
+          </div>
+          <div className='form-group'>
+            <label><strong>Points expires after </strong></label>
+            <Select
+                options={expiry_months}
+                onChange={this.handleExpirationMonthChange}
+                value={expiry_months.filter(option => option.value === this.state.expiration_months)}
             />
           </div>
 

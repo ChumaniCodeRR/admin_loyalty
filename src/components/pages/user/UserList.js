@@ -79,7 +79,9 @@ class UserList extends Component {
         cell: row =>  <>
                         {
                           this.state.canUpdateUser && (
-                            <a className='btn btn-link' href={'/user/edit/' + row.id + '?owner=' + this.state.user_id}><i className='fa fa-edit'> </i></a>
+                            <a className='btn btn-link' href={'/user/edit/' + row.id + '?owner=' + this.state.user_id}>
+                              <i className='fa fa-edit'> </i>
+                            </a>
                           )
                         }
                         {

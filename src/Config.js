@@ -1,4 +1,9 @@
 const config = {
+  expiry_months: [
+    {value: 6, label: '6 Months'},
+    {value: 12, label: '12 Months'},
+    {value: 24, label: '24 Months'},
+  ],
   currencies: [
     {value:"AED","symbol":"\u062f.\u0625;",label:"UAE dirham"},
     {value:"AFN","symbol":"Afs",label:"Afghan afghani"},
