@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DataTable from 'react-data-table-component';
 import TransactionTypeWidget from '../TransactionTypeWidget';
+import TransactionModal from "../../transaction/modals/TransactionModal";
 
 class TransactionTable extends Component {
   render () {
@@ -57,7 +58,7 @@ class TransactionTable extends Component {
       },
       {
         name: '',
-        cell: row => <> <button className='btn btn-link'><i className='fa fa-eye'> </i></button> </>
+        cell: row => <> <TransactionModal transaction={row} /> </>
       }
     ];
     return (

@@ -28,14 +28,14 @@ class MemberTransactions extends Component {
   }
 
   fetchTransactions = async (e) => {
-    this.setState({ 
+    this.setState({
       loading: true
     });
     await this.props.getMemberTransactions(this.state.cell_number, this.state.account_id);
     this.setState({
       transactions: this.props.transactions
     });
-    this.setState({ 
+    this.setState({
       loading: false
     });
   }
@@ -51,7 +51,7 @@ class MemberTransactions extends Component {
               <div className='col-md-12'>
                 {
                   this.state.account_id && (
-                    <a href={'/members/' + this.state.account_id}><i class='fa fa-angle-left'> </i> Back to members list</a>
+                    <a href={'/members/' + this.state.account_id}><i className='fa fa-angle-left'> </i> Back to members list</a>
                   )
                 }
                 <div className='card'>
