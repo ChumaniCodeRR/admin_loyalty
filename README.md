@@ -1,68 +1,45 @@
+
+# Vetro loyalty frontend
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+# Installation
 
-In the project directory, you can run:
+    $ git clone [repository name]
+    $ cd vetro-loyalty-admin
+    $ npm install
+    $ cp .env.example .env // To set the base url of the API to consume usign the variable REACT_APP_API_URL
+    $ yarn start
 
-### `yarn start`
+Please note that this application is dependent of [Vetro Loyalty API](https://bitbucket.org/vetrodevs/vetro_loyalty). Please ensure that the repository is correcty installed in your localhost for development purposes, or consume staging API url on [https://vapi.vetroms.co.za/api/documentation] (https://vapi.vetroms.co.za/api/documentation)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Technical information
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+We have used React-redux, redux, thunk and class components.
 
-### `yarn test`
+### Reducers & Actions
+Reducers and actions can be found in "store" folder.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Axios interceptor
+We are also using axios interceptors for http request where the access token is passed automatically when use is authenticated.
+Interceptor is located in /instances/http.js
 
-### `yarn build`
+### Helpers
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The helper files contain different functions to help certain features of the system. The helpers are located in helpers
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+#### Permission
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Helps verifying if user has a given permission.
 
-### `yarn eject`
+Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    can('edit-loyalty', permissions: array);
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### User
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Helps checking if a user is an admin, client, manager  based on the user's roles.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Voucher
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Helps get the different voucher variables including voucher type, discount type, and volumes (Single or Bulk).
